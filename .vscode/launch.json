@@ -1,0 +1,26 @@
+{
+    "version": "1.0.0",
+    "configurations": [
+        {
+            "console": "internalConsole",
+            "internalConsoleOptions": "neverOpen",
+            "name": "nodemon",
+            "program": "${workspaceFolder}/index.js",
+            "request": "launch",
+            "restart": true,
+            "runtimeExecutable": "nodemon",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/**",
+                "${workspaceFolder}/log/**"
+            ],
+            "type": "pwa-node",
+            "env": {
+                "NODE_ENV": "development",
+                "NODE_PATH": "${workspaceRoot}/lib",
+                "PORT": "18301",
+                "IP": "0.0.0.0",
+            }
+        }
+    ]
+}
