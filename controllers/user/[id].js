@@ -1,6 +1,8 @@
 
 module.exports = {
     method: "GET",
+    auth: false,
+    root: false,
     async execute(fastify, request, reply) {
         try {
             // Получаем id

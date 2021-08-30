@@ -2,16 +2,16 @@
 // 10 запросов в 5 секунд
 const config = {
     rateLimit: {
-        max: 1,
-        timeWindow: 1000 * 60
+        max: 10,
+        timeWindow: 5000
     }
 }
 
 module.exports = {
     method: "GET",
-    // auth: true,
-    // root: true,
-    // config: config,
+    auth: true,
+    root: false,
+    config: config,
     async execute(fastify, request, reply) {
         try {
             reply
