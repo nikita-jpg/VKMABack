@@ -1,10 +1,8 @@
 const fastify = require('fastify')({ logger: true })
 fastify.register(require('fastify-formbody'));
 
-// Создаем первый маршрут
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+// Автоматический рутинг, основанный на файлах и папках
+fastify.register(require('fastify-easy-route'));
 
 // Функция запуска сервера
 const start = () => {
