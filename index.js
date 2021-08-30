@@ -4,6 +4,10 @@ fastify.register(require('fastify-formbody'));
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'));
 
+// Сокращает отправку ответа до fastify.response.All(код, ответ, reply)
+fastify.register(require('./module/response'));
+
+
 // Функция запуска сервера
 const start = () => {
     try {

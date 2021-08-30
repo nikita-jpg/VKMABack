@@ -1,3 +1,4 @@
+
 module.exports = {
     method: "GET",
     async execute(fastify, request, reply) {
@@ -14,23 +15,14 @@ module.exports = {
             // Проверяем не передали ли нам отрицательное число, 
             // либо id больше того который у нас есть
             if(id >= 0 && id <= users.length - 1){
-                reply
-                .code(200)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send(users[id]);
+                fastify.response.All(200, users[id], reply)
             }
             else {
-                reply
-                .code(404)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send("Not Found");
+                fastify.response.All(404, "Not Found123", reply)
             }
         }
         catch (error) {
-            reply
-                .code(500)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send("This is very bad =(");
+            fastify.response.All(500, "This is very bad =(", reply)
         }
     }
 }
