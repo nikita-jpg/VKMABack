@@ -16,6 +16,7 @@
             ],
             "type": "pwa-node",
             "env": {
+                "SECRET_CODE": "4kzspMUxNodCB9w28uI7",
                 "NODE_ENV": "development",
                 "NODE_PATH": "${workspaceRoot}/lib",
                 "PORT": "18301",
