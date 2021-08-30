@@ -1,10 +1,35 @@
-const logger = require('./module/logger');
-
-const fastify = require('fastify')({
-    logger: logger("test_api")
+const sign = require('./module/sign'); // импорт функции проверки подписи.
+const Redis = require('ioredis'); // импорт либы для использования redis.
+const redis = new Redis({
+    connectionName: process.env.REDIS_CONNECTION_NAME,
+    host: process.env.REDIS_HOST,
+    port: +process.env.REDIS_PORT,
+    connectTimeout: +process.env.REDIS_TIMEOUT
 })
 
+const fastify = require('fastify')({
+    logger: {
+        level: 'error',
+        file: `log/${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDay()}.log`
+    }
+});
 fastify.register(require('fastify-formbody'));
+
+fastify.register(require('fastify-rate-limit'),
+    {
+        global: false, // Не используем глобальные лимиты.
+        redis: redis, // Используем redis для хранения данных о лимитах.
+        keyGenerator: (request) => {
+            // Проверяем подпись параметров запуска.
+            // Параметры передаются в header в параметре Authorization
+            let param = sign(request.headers.authorization); 
+            if (param) {
+                request.sign = param;
+                return param.vk_user_id;
+            } else { return "undefined" }
+        },
+        errorResponseBuilder: () => { return undefined },
+    });
 
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'));

@@ -1,5 +1,13 @@
+
+// 10 запросов в 5 секунд
 module.exports = {
     method: "GET",
+    config: {
+        rateLimit: {
+            max: 10,
+            timeWindow: 5000
+        }
+    },
     async execute(fastify, request, reply) {
         try {
             reply

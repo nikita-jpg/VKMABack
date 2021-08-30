@@ -21,6 +21,10 @@
                 "NODE_PATH": "${workspaceRoot}/lib",
                 "PORT": "18301",
                 "IP": "0.0.0.0",
+                "REDIS_CONNECTION_NAME": "RAID_LIMIT",
+                "REDIS_HOST": "localhost",
+                "REDIS_PORT": "6379",
+                "REDIS_TIMEOUT": "500"
             }
         }
     ]
