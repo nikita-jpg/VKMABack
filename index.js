@@ -13,6 +13,13 @@ const fastify = require('fastify')({
         file: `log/${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDay()}.log`
     }
 });
+
+fastify.register(require('fastify-cors'), {
+    origin: "*",
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+})
+
 fastify.register(require('fastify-formbody'));
 
 fastify.register(require('fastify-rate-limit'),
