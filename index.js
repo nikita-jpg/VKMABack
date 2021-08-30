@@ -1,12 +1,16 @@
-const fastify = require('fastify')({ logger: true })
+const logger = require('./module/logger');
+
+const fastify = require('fastify')({
+    logger: logger("test_api")
+})
+
 fastify.register(require('fastify-formbody'));
 
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'));
 
-// Сокращает отправку ответа до fastify.response.All(код, ответ, reply)
+// Сокращает ответ до fastify.response.All(код, ответ, reply)
 fastify.register(require('./module/response'));
-
 
 // Функция запуска сервера
 const start = () => {
@@ -24,6 +28,5 @@ const start = () => {
         process.exit(1)
     }
 }
-
 // Запускаем сервер
 start()
