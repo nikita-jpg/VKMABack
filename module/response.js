@@ -21,11 +21,3 @@ module.exports = fp((fastify, options, next) => {
     fastify: '>=3.0.0',
     name: 'fastify-response'
 })
-
-// module.exports = function (fastify, opts, done) {
-//     fastify.decorate('utility', () => {})
-  
-//     fastify.get('/', handler)
-  
-//     done()
-//   }
