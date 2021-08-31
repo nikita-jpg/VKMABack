@@ -24,7 +24,13 @@
                 "REDIS_CONNECTION_NAME": "RAID_LIMIT",
                 "REDIS_HOST": "localhost",
                 "REDIS_PORT": "6379",
-                "REDIS_TIMEOUT": "500"
+                "REDIS_TIMEOUT": "500",
+
+                //Бд
+                "DB_HOST":"",
+                "DB_NAME":"",
+                "DB_DATABASE":"",
+                "DB_PASSWORD":""
             }
         }
     ]

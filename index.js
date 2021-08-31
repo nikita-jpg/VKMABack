@@ -47,6 +47,9 @@ fastify.register(require('fastify-easy-route'), {
 // Сокращает ответ до fastify.response.All(код, ответ, reply)
 fastify.register(require('./module/response'));
 
+// Рукописный плагин для работы с бд
+fastify.register(require('mysql'));
+
 // Функция запуска сервера
 const start = () => {
     try {

@@ -14,16 +14,15 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            reply
-                .code(200)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send({ message: "I'm super api" });
+            fastify.response.All(200, "I'm super api", reply)
         }
         catch (error) {
-            reply
-                .code(500)
-                .header('Content-Type', 'application/json; charset=utf-8')
-                .send({ message: "This is very bad =(" });
+            fastify.response.All(500, "This is very bad =(", reply)
         }
     }
 }
+
+// Такой формат уменьшает вероятность sql-инъекции
+// const GET_USER = `SELECT * FROM users WHERE id = ? AND role = ?;`;
+
+// await fastify.mysql.query(GET_USER, [_user_id, user.role]);
