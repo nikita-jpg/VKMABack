@@ -27,10 +27,10 @@
                 "REDIS_TIMEOUT": "500",
 
                 //Бд
-                "DB_HOST":"",
-                "DB_NAME":"",
-                "DB_DATABASE":"",
-                "DB_PASSWORD":""
+                "DB_HOST":"127.0.0.1",
+                "DB_NAME":"root",
+                "DB_PASSWORD":"toor",
+                "DB_DATABASE":"vkma_data"
             }
         }
     ]

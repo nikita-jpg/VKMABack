@@ -41,7 +41,7 @@ fastify.register(require('fastify-rate-limit'),
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'), {
     path: "controllers",
-    middleware: './module/middleware'
+    // middleware: './module/middleware'
 });
 
 // Сокращает ответ до fastify.response.All(код, ответ, reply)
@@ -49,6 +49,13 @@ fastify.register(require('./module/response'));
 
 // Рукописный плагин для работы с бд
 fastify.register(require('./module/mysql'));
+
+// Для отправки статики
+// const path = require('path');
+// fastify.register(require('fastify-static'), {
+//     root: path.join(__dirname, 'public'), // root - расположение папки со статикой
+//     prefix: '/public/', // prefix - префикс по которому эта статика будет доступна
+// })
 
 // Функция запуска сервера
 const start = () => {

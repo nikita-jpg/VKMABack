@@ -7,6 +7,8 @@ const config = {
     }
 }
 
+const GET_IMAGE = `SELECT content FROM images WHERE id = 7`;
+
 module.exports = {
     method: "GET",
     auth: true,
@@ -14,9 +16,14 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            fastify.response.All(200, "I'm super api", reply)
+            const blob = await fastify.mysql.query(GET_IMAGE);
+            let bufferImage = Buffer.from(blob[0][0].content);
+            return reply
+                .type("image/jpg")
+                .send(bufferImage)
         }
         catch (error) {
+            console.log(error)
             fastify.response.All(500, "This is very bad =(", reply)
         }
     }

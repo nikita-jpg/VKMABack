@@ -1,6 +1,5 @@
 module.exports = {
   async execute(fastify, command, request, reply) {
-    console.log(request)
     try {
       // Получение id из объекта sign который 
       // был инициализирован после проверки подписи
@@ -8,7 +7,6 @@ module.exports = {
       //
       let _auth = command?.auth; // true
       let _root = command?.root; // true
-      console.log(id)
       if (id && _auth) {
           // Получение данных о пользователе с бд или любого хранилища ... 
           let user = { name: "Artur Frank", root: 1 };
@@ -25,3 +23,17 @@ module.exports = {
     }
  }
 }
+
+
+
+// module.exports = {
+//   async execute(fastify, command, request, reply) {
+//     try {
+//         request.body = { ...{ id: id }, ...request.body };
+//     }
+//     catch (error) {
+//       fastify.log.error(error);
+//       return fastify.response.All(500, { message: `500 Internal Server Error` }, reply);
+//     }
+//  }
+// }
