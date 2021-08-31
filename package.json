@@ -25,8 +25,10 @@
     "fastify-formbody": "^5.1.0",
     "fastify-plugin": "^3.0.0",
     "fastify-rate-limit": "^5.6.2",
+    "fastify-static": "^4.2.3",
     "ioredis": "^4.27.9",
     "mysql2": "^2.3.0",
+    "path": "^0.12.7",
     "querystring": "^0.2.1",
     "winston": "^3.3.3"
   },

@@ -48,7 +48,7 @@ fastify.register(require('fastify-easy-route'), {
 fastify.register(require('./module/response'));
 
 // Рукописный плагин для работы с бд
-fastify.register(require('mysql'));
+fastify.register(require('./module/mysql'));
 
 // Функция запуска сервера
 const start = () => {
