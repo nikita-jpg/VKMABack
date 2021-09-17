@@ -8,12 +8,14 @@ module.exports = {
       let _auth = command?.auth; // true
       let _root = command?.root; // true
       if (id && _auth) {
+        // console.log("inside")
           // Получение данных о пользователе с бд или любого хранилища ... 
           let user = { name: "Artur Frank", root: 1 };
           //
+          request.body = { ...{ id: id }, ...request.body };
           
-          if (!_root || user.role == _root) { request.body = { ...{ id: id }, ...request.body }; }
-          else { return fastify.response.All(403, { message: `403 Forbidden` }, reply); }
+          // if (!_root || user.role == _root) { request.body = { ...{ id: id }, ...request.body }; }
+          // else { return fastify.response.All(403, { message: `403 Forbidden` }, reply); }
       }
       else {return fastify.response.All(400, { message: `400 Bad Request` }, reply);}
     }

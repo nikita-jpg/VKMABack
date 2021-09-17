@@ -1,12 +1,13 @@
 
 module.exports = {
     method: "GET",
-    auth: false,
+    auth: true,
     root: false,
     async execute(fastify, request, reply) {
         try {
             // Получаем id
             let id = request.params?.id;
+            console.log(id)
             // Тут может быть запрос к БД. Для примера маленький массив
             let users = [
                 { name: "Антон", sex: 2},
@@ -20,7 +21,7 @@ module.exports = {
                 fastify.response.All(200, users[id], reply)
             }
             else {
-                fastify.response.All(404, "Not Found123", reply)
+                fastify.response.All(404, "Not Found", reply)
             }
         }
         catch (error) {

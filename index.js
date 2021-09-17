@@ -41,7 +41,7 @@ fastify.register(require('fastify-rate-limit'),
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'), {
     path: "controllers",
-    // middleware: './module/middleware'
+    middleware: './module/middleware'
 });
 
 // Сокращает ответ до fastify.response.All(код, ответ, reply)
