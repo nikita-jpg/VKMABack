@@ -20,10 +20,10 @@ module.exports = {
         try {
             const GET_USER = `SELECT * FROM persons WHERE vkId = ?;`;
             let id = request.body.id;
-            console.log(id)
-            const req = await dbReq.updateUserIsFirstOpen(fastify, id);
+            // console.log(id)
+            const req = await dbReq.getStartDate(fastify, id);
             // const tes = await fastify.mysql.query(GET_USER, [id]);
-            console.log(req)
+            // console.log(req)
             return fastify.response.All(200, req, reply)
             // return reply
             //     .type("image/jpg")
