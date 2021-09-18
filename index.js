@@ -57,6 +57,44 @@ fastify.register(require('./module/mysql'));
 //     prefix: '/public/', // prefix - префикс по которому эта статика будет доступна
 // })
 
+fastify.register(
+    require('sequelize-fastify'),
+    {
+      instance: 'sequelize',
+      sequelizeOptions: {
+        dialect: 'mysql', /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+        database: 'mydb',
+        username: 'root',
+        password: 'toor',
+        host: "127.0.0.1",
+        port: 3307,
+        logging: false,
+        define: {
+            timestamps: false
+          }
+      }
+    }
+  )
+    .ready(async () => {
+      try {
+        // Инициализация моделей
+        const initModels = require('./module/models');
+        try{
+            initModels.initModels(fastify);
+            fastify.sequelize.sync().then(result=>{
+                // console.log(result);
+              })
+              .catch(err=> console.log(err));
+        }catch(err){
+            console.log(err)
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    })
+
+
+
 // Функция запуска сервера
 const start = () => {
     try {
