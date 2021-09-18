@@ -19,8 +19,9 @@ exports.initModels = function(fastify){
     )
 }
 
-exports.getAllUsers = function(){
-    User.findAll({raw:true}).then(users=>{
-        console.log(users);
-      }).catch(err=>console.log(err));
+exports.getUserById = async function(id){
+    const ret = await User.findByPk(id,{raw:true})
+                          .then(user=>{return user})
+                          .catch(err=>console.log(err));
+    return ret 
 }

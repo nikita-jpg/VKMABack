@@ -17,17 +17,11 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            console.log("sdf")
             const GET_USER = `SELECT * FROM person WHERE vkId = ?;`;
             let id = request.body.id;
-            try{
-                console.log(test.getAllUsers())
-            }catch(err){
-                console.log(err)
-            }
             
-            // const req = await fastify.mysql.query(GET_USER, [id]);
-            // console.log(req)
+            const req = await test.getUserById(157270543)
+            console.log(req.vkId)
             // const blob = await fastify.mysql.query(GET_IMAGE);
             // let bufferImage = Buffer.from(blob[0][0].content);
             return fastify.response.All(200, req, reply)
