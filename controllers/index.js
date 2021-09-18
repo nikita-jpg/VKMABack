@@ -6,6 +6,8 @@ const config = {
     }
 }
 
+const dbReq = require('../module/dbReq');
+
 const GET_IMAGE = `SELECT content FROM images WHERE id = 7`;
 // fastify.register(require('mysql'));
 // const mysql = require('../module/mysql'); // импорт функции проверки подписи.
@@ -16,13 +18,12 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            const GET_USER = `SELECT * FROM person WHERE vkId = ?;`;
+            const GET_USER = `SELECT * FROM persons WHERE vkId = ?;`;
             let id = request.body.id;
             console.log(id)
-            const req = await fastify.mysql.query(GET_USER, [id]);
+            const req = await dbReq.updateUserIsFirstOpen(fastify, id);
+            // const tes = await fastify.mysql.query(GET_USER, [id]);
             console.log(req)
-            // const blob = await fastify.mysql.query(GET_IMAGE);
-            // let bufferImage = Buffer.from(blob[0][0].content);
             return fastify.response.All(200, req, reply)
             // return reply
             //     .type("image/jpg")
