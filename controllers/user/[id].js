@@ -1,6 +1,6 @@
 
 module.exports = {
-    method: "GET",
+    method: "GET",0,2
     auth: true,
     root: false,
     async execute(fastify, request, reply) {
@@ -27,5 +27,5 @@ module.exports = {
         catch (error) {
             fastify.response.All(500, "This is very bad =(", reply)
         }
-    }
-}
+    }+
++
