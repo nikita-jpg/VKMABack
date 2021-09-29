@@ -189,7 +189,7 @@ Question.hasMany(AnswerOption,{foreignKey: 'idQuestion', as:'answerOptions', onU
 AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 
 //Вопрос и ответ пользователя
-Question.hasMany(PersonAnswerOption,{foreignKey: 'idQuestion', as:'idAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+Question.hasOne(PersonAnswerOption,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
 PersonAnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 // Person.belongsToMany(Question,{through: 'PersonAnswerOptions', foreignKey: 'idPerson'})
 
@@ -245,7 +245,7 @@ const eraSheme = {
   
         //Вопросы
         questions:{
-          include: ['@all', 'image', 'answerOptions', 'idAnswer'],
+          include: ['@all', 'image', 'answerOptions', 'userAnswer'],
           exclude: ['idSurvey','imageName'],
           assoc:{
 
@@ -259,7 +259,7 @@ const eraSheme = {
             },
 
             //Вариант ответа пользователя
-            idAnswer:{
+            userAnswer:{
               include:['idAnswer']
             }
             
@@ -298,7 +298,7 @@ exports.getEras = async function(userId){
         {model: AnswerOption, as: 'answerOptions'},
 
         //Вариант ответа пользователя
-        {model: PersonAnswerOption, as: 'idAnswer', where:{idPerson:userId}}
+        {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson:userId}}
 
       ]},
     ]},
