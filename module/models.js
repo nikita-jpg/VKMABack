@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const JSON = require('fast-json-stable-stringify');
+const Serializer = require('sequelize-to-json');
 
 let Era;
 module.exports.initModels = function(fastify){
@@ -21,25 +22,20 @@ module.exports.initModels = function(fastify){
           type: Sequelize.STRING,
           allowNull: false
         },
-        idImageInEras: {
-          type: Sequelize.INTEGER,
+        imageName: {
+          type: Sequelize.STRING,
           allowNull: false
         }
       });
 
     ImageFromDb = fastify.sequelize.define("Images",
     {
-        idImage: {
+      imageName: {
           type: Sequelize.INTEGER,
           primaryKey: true,
-          autoIncrement: true,
           allowNull: false,
         },
         sourceImageLink: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        imageName: {
           type: Sequelize.STRING,
           allowNull: false
         }
@@ -65,8 +61,8 @@ module.exports.initModels = function(fastify){
           type: Sequelize.INTEGER,
           allowNull: false
         },
-        idImage: {
-          type: Sequelize.INTEGER,
+        imageName: {
+          type: Sequelize.STRING,
           allowNull: false
         }
       });
@@ -79,18 +75,18 @@ module.exports.initModels = function(fastify){
           autoIncrement: true,
           allowNull: false,
         },
-        textQuestion: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        idSurveyInQuestion: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        idImageInQuestion: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        }
+      textQuestion: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      idSurvey: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      imageName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      }
       });
 
     AnswerOption = fastify.sequelize.define("AnswerOptions",
@@ -101,7 +97,7 @@ module.exports.initModels = function(fastify){
           autoIncrement: true,
           allowNull: false,
         },
-        idQuestionInAnswer: {
+        idQuestion: {
           type: Sequelize.INTEGER,
           allowNull: false
         },
@@ -112,50 +108,93 @@ module.exports.initModels = function(fastify){
         score: {
           type: Sequelize.STRING,
           allowNull: false
-        },
-        isPersonAnswerd: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false
         }
       });
     
-      Person_Answer = fastify.sequelize.define("Person_Answers",
-      {
-        idPerson: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            allowNull: false
-          },        
-        idAnswerOption: {
+    Person_Answer = fastify.sequelize.define("Person_Answers",
+    {
+      idPerson: {
           type: Sequelize.INTEGER,
           primaryKey: true,
           allowNull: false
+        },        
+      idAnswerOption: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false
+      }
+    });
+
+    Person = fastify.sequelize.define("Persons",
+    {
+      idPerson: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+          allowNull: false,
+        },
+        isFirstOpen: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false
         }
-      });
+    });
+
+    PersonAnswerOption = fastify.sequelize.define("PersonAnswerOptions",
+    {
+      idPerson: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          allowNull: false,
+        },
+        idQuestion: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          allowNull: false
+        },
+        idAnswer: {
+          type: Sequelize.STRING,
+          allowNull: false
+        }
+    });
       
-    
-          
+const configForImage = {
+  foreignKey: 'imageName',
+  as:'image',
+  onUpdate:'CASCADE', 
+  onDelete:'NO ACTION'
+}
 
-      ImageFromDb.hasOne(Era,{foreignKey: 'idImageInEras'})
-      Era.belongsTo(ImageFromDb,{foreignKey: 'idImageInEras', onUpdate:'CASCADE', onDelete:'NO ACTION'})
+//Картинка и эпоха
+ImageFromDb.hasOne(Era,{foreignKey: 'imageName'})
+Era.belongsTo(ImageFromDb,{...configForImage})
 
-      ImageFromDb.hasOne(Question,{foreignKey: 'idImageInQuestion', onUpdate:'CASCADE',onDelete:'CASCADE'})
-      Question.belongsTo(ImageFromDb,{foreignKey: 'idImageInQuestion', onUpdate:'CASCADE', onDelete:'NO ACTION'})
+//Картинка и опрос
+ImageFromDb.hasOne(Survey,{foreignKey: 'imageName'})
+Survey.belongsTo(ImageFromDb,{...configForImage})
 
-      Era.hasMany(Survey, {foreignKey: 'idEra', onUpdate:'CASCADE',onDelete:'CASCADE'})
-      Survey.belongsTo(Era,{foreignKey: 'idEra', onUpdate:'CASCADE', onDelete:'NO ACTION'})
-      
-      ImageFromDb.hasOne(Question,{foreignKey: 'idImageInQuestion', onUpdate:'CASCADE',onDelete:'CASCADE'})
-      Question.belongsTo(ImageFromDb,{foreignKey: 'idImageInQuestion', onUpdate:'CASCADE', onDelete:'NO ACTION'})
+//Картинка и вопрос
+ImageFromDb.hasOne(Question,{foreignKey: 'imageName'})
+Question.belongsTo(ImageFromDb,{...configForImage})
 
-      Survey.hasMany(Question,{foreignKey: 'idSurveyInQuestion', onUpdate:'CASCADE',onDelete:'CASCADE'})
-      Question.belongsTo(Survey,{foreignKey: 'idSurveyInQuestion', onUpdate:'CASCADE', onDelete:'NO ACTION'})
+//Эпоха и опрос
+Era.hasMany(Survey, {foreignKey: 'idEra', as:'surveys', onUpdate:'CASCADE',onDelete:'CASCADE'})
+Survey.belongsTo(Era,{foreignKey: 'idEra'})
 
-      Question.hasMany(AnswerOption,{foreignKey: 'idQuestionInAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-      AnswerOption.belongsTo(Question,{foreignKey: 'idQuestionInAnswer', onUpdate:'CASCADE', onDelete:'NO ACTION'})
+//Опрос и вопрос
+Survey.hasMany(Question,{foreignKey: 'idSurvey', as:'questions', onUpdate:'CASCADE',onDelete:'CASCADE'})
+Question.belongsTo(Survey,{foreignKey: 'idSurvey'})
 
-      Person_Answer.belongsToMany(AnswerOption, {through: 'PersonAnswerOptions' })
-      AnswerOption.belongsToMany(Person_Answer, {through: 'PersonAnswerOptions' })
+//Вопрос и варианты ответа
+Question.hasMany(AnswerOption,{foreignKey: 'idQuestion', as:'answerOptions', onUpdate:'CASCADE',onDelete:'CASCADE'})
+AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
+
+//Вопрос и ответ пользователя
+Question.hasMany(PersonAnswerOption,{foreignKey: 'idQuestion', as:'idAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+PersonAnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
+// Person.belongsToMany(Question,{through: 'PersonAnswerOptions', foreignKey: 'idPerson'})
+
+// Person_Answer.belongsToMany(AnswerOption, {through: 'PersonAnswerOptions' })
+// AnswerOption.belongsToMany(Person_Answer, {through: 'PersonAnswerOptions' })
 
 
 
@@ -184,7 +223,54 @@ module.exports.initModels = function(fastify){
     // Person_Progress.belongsTo(User)
 }
 
-exports.getEras = async function(){
+const eraSheme = {
+
+  //Эпоха
+  include: ['@all', 'image', 'surveys'],
+  exclude: ['@pk','@fk'],
+  assoc:{
+    image:{
+      include:['imageName','sourceImageLink']
+    },
+
+    //Опросы
+    surveys:{
+      include: ['@all', 'image', 'questions'],
+      exclude: ['@pk','@fk'],
+      assoc:{
+
+        image:{
+          include:['imageName','sourceImageLink']
+        },
+  
+        //Вопросы
+        questions:{
+          include: ['@all', 'image', 'answerOptions', 'idAnswer'],
+          exclude: ['idSurvey','imageName'],
+          assoc:{
+
+            image:{
+              include:['imageName','sourceImageLink']
+            },
+
+            //Варианты ответа
+            answerOptions:{
+              include: ['@all']
+            },
+
+            //Вариант ответа пользователя
+            idAnswer:{
+              include:['idAnswer']
+            }
+            
+          }
+        }
+      }
+    }
+  }
+}
+
+exports.getEras = async function(userId){
   // let firstImage = await ImageFromDb.findByPk('2');
   // firstImage.sourceImageLink = 'Не ссылка на исходник';
   // await firstImage.save();
@@ -192,9 +278,37 @@ exports.getEras = async function(){
   // let newFirstImage = await ImageFromDb.findByPk('2');
   // return newFirstImage
   //{include: [{model:Survey, include:{model: Question, include:AnswerOption}}, ImageFromDb]}
-  const ret = await Era.findAll()
-                        .then(eras=>{return JSON(eras, null, 2)})
-                        .catch(eras=>console.log(eras));
+  const ret = await Era.findAll({include:[
+
+    //Эпоха
+    {model: ImageFromDb, as: 'image'},
+
+    //Опросы
+    {model: Survey, as: 'surveys', include:[
+
+      //Картинка опроса
+      {model: ImageFromDb, as: 'image'},
+
+      //Вопросы
+      {model: Question, as: 'questions',include:[
+        
+        {model: ImageFromDb, as: 'image'},
+
+        //Варианты ответа
+        {model: AnswerOption, as: 'answerOptions'},
+
+        //Вариант ответа пользователя
+        {model: PersonAnswerOption, as: 'idAnswer', where:{idPerson:userId}}
+
+      ]},
+    ]},
+
+  ]}).then(eras=>{
+    let postsAsJSON = Serializer.serializeMany(eras, Era, eraSheme);
+    console.log(postsAsJSON)
+    return postsAsJSON
+  })
+  .catch(eras=>console.log(eras));
   return ret
 }
 

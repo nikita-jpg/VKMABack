@@ -20,7 +20,7 @@ module.exports = {
             const GET_USER = `SELECT * FROM person WHERE vkId = ?;`;
             let id = request.body.id;
             
-            const req = await test.getEras()
+            const req = await test.getEras(1)
             console.log(req)
             // const blob = await fastify.mysql.query(GET_IMAGE);
             // let bufferImage = Buffer.from(blob[0][0].content);
