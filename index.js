@@ -51,11 +51,10 @@ fastify.register(require('./module/response'));
 fastify.register(require('./module/mysql'));
 
 // Для отправки статики
-// const path = require('path');
-// fastify.register(require('fastify-static'), {
-//     root: path.join(__dirname, 'public'), // root - расположение папки со статикой
-//     prefix: '/public/', // prefix - префикс по которому эта статика будет доступна
-// })
+const path = require('path');
+fastify.register(require('fastify-static'), {
+    root: path.join(__dirname, 'public'), // public - расположение папки со статикой отнносительно папки с текущим файлом (то есть с папки с index.js)
+})
 
 fastify.register(
     require('sequelize-fastify'),
@@ -75,23 +74,23 @@ fastify.register(
       }
     }
   )
-    .ready(async () => {
-      try {
-        // Инициализация моделей
-        const initModels = require('./module/models');
-        try{
-            initModels.initModels(fastify);
-            fastify.sequelize.sync().then(result=>{
-                // console.log(result);
-              })
-              .catch(err=> console.log(err));
-        }catch(err){
-            console.log(err)
-        }
-      } catch(err) {
+.ready(async () => {
+    try {
+    // Инициализация моделей
+    const initModels = require('./module/models');
+    try{
+        initModels.initModels(fastify);
+        fastify.sequelize.sync().then(result=>{
+            // console.log(result);
+            })
+            .catch(err=> console.log(err));
+    }catch(err){
         console.log(err)
-      }
-    })
+    }
+    } catch(err) {
+    console.log(err)
+    }
+})
 
 
 

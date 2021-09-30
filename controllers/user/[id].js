@@ -1,6 +1,6 @@
 
 module.exports = {
-    method: "GET",0,2
+    method: "GET",
     auth: true,
     root: false,
     async execute(fastify, request, reply) {

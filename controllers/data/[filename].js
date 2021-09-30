@@ -1,14 +1,12 @@
 module.exports = {
     method: "GET",
-    auth: false,
+    auth: true,
     admin: false,
     config: {},
     async execute(fastify, request, reply) {
-        console.log("1651")
         try {
-            let a = request.params.filename;
-            console.log(a)
-            return reply.sendFile(a)
+            const imageName = request.params.filename;
+            return reply.sendFile(imageName)
         }
         catch (error) {
             console.log(err);

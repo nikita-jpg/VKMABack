@@ -1,161 +1,153 @@
 const Sequelize = require("sequelize");
-const JSON = require('fast-json-stable-stringify');
 const Serializer = require('sequelize-to-json');
 
 let Era;
 module.exports.initModels = function(fastify){
 
-    //Пользователь
-    Era = fastify.sequelize.define("Eras",
-    {
-        idEra: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        russianName: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        description: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        imageName: {
-          type: Sequelize.STRING,
-          allowNull: false
-        }
-    });
+//Пользователь
+Era = fastify.sequelize.define("Eras",
+{
+    idEra: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    russianName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    imageName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+});
 
-    ImageFromDb = fastify.sequelize.define("Images",
-    {
-      imageName: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          allowNull: false,
-        },
-        sourceImageLink: {
-          type: Sequelize.STRING,
-          allowNull: false
-        }
-    });
+//Картинка
+ImageFromDb = fastify.sequelize.define("Images",
+{
+  imageName: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+    },
+    sourceImageLink: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+});
 
-    Survey = fastify.sequelize.define("Surveys",
-    {
-        idSurvey: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        russianName: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        description: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        idEra: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        imageName: {
-          type: Sequelize.STRING,
-          allowNull: false
-        }
-    });
+//Опрос
+Survey = fastify.sequelize.define("Surveys",
+{
+    idSurvey: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    russianName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    idEra: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    imageName: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+});
 
-    Question = fastify.sequelize.define("Questions",
-    {
-      idQuestion: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-      textQuestion: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      idSurvey: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      imageName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      }
-    });
+//Вопрос
+Question = fastify.sequelize.define("Questions",
+{
+  idQuestion: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+  textQuestion: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  idSurvey: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  imageName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  }
+});
 
-    AnswerOption = fastify.sequelize.define("AnswerOptions",
-    {
-      idAnswerOption: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        idQuestion: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-        text: {
-          type: Sequelize.STRING,
-          allowNull: false
-        },
-        score: {
-          type: Sequelize.STRING,
-          allowNull: false
-        }
-    });
-    
-    Person_Answer = fastify.sequelize.define("Person_Answers",
-    {
-      idPerson: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          allowNull: false
-        },        
-      idAnswerOption: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        allowNull: false
-      }
-    });
+//Вариант ответа
+AnswerOption = fastify.sequelize.define("AnswerOptions",
+{
+  idAnswerOption: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    idQuestion: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    text: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    score: {
+      type: Sequelize.STRING,
+      allowNull: false
+    }
+});
 
-    Person = fastify.sequelize.define("Persons",
-    {
-      idPerson: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          allowNull: false,
-        },
-      isFirstOpen: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false
-        }
-    });
+//Пользователь
+Person = fastify.sequelize.define("Persons",
+{
+  idPerson: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+    },
+  isFirstOpen: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false
+    }
+});
 
-    PersonAnswerOption = fastify.sequelize.define("PersonAnswerOptions",
-    {
-      idPerson: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          allowNull: false,
-        },
-        idQuestion: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          allowNull: false
-        },
-        idAnswer: {
-          type: Sequelize.STRING,
-          allowNull: false
-        }
-    });
-      
+//Ответы пользователя на вопросы
+PersonAnswerOption = fastify.sequelize.define("PersonAnswerOptions",
+{
+  idPerson: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+    },
+  idQuestion: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false
+    },
+  idAnswer: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    }
+});
+
+//Конфигурация для связи между объектом и картинкой в бд
 const configForImage = {
   foreignKey: 'imageName',
   as:'image',
@@ -190,36 +182,6 @@ AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 //Вопрос и ответ пользователя
 Question.hasOne(PersonAnswerOption,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
 PersonAnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
-// Person.belongsToMany(Question,{through: 'PersonAnswerOptions', foreignKey: 'idPerson'})
-
-// Person_Answer.belongsToMany(AnswerOption, {through: 'PersonAnswerOptions' })
-// AnswerOption.belongsToMany(Person_Answer, {through: 'PersonAnswerOptions' })
-
-
-
-      // Survey.belongsTo(Era, {foreignKey: 'idEra', as: 'era'})
-
-    //Прогресс
-    // Person_Progress = fastify.sequelize.define("person_progresses",
-    // {
-    //     survey_prefix: {
-    //         type: Sequelize.STRING,
-    //         primaryKey: true,
-    //         allowNull: false
-    //     },
-    //     // person_vkId: {
-    //     //     type: Sequelize.INTEGER,
-    //     //     primaryKey: true,
-    //     //     allowNull: false
-    //     // },
-    //     personProgress: {
-    //         type: Sequelize.INTEGER,
-    //         allowNull: false
-    //     }
-    //   })
-
-    // User.hasMany(Person_Progress)
-    // Person_Progress.belongsTo(User)
 }
 
 const eraSheme = {
@@ -268,6 +230,8 @@ const eraSheme = {
     }
   }
 }
+
+//Получаем стартовые данные
 exports.getEras = async function(userId){
 
   //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
@@ -279,7 +243,7 @@ exports.getEras = async function(userId){
         idPerson: userId,
         isFirstOpen: false
       }
-    ).then(res=>{console.log(res)}).catch(err=>{console.log(err)})
+    ).catch(err=>{console.log(err)})
   }
 
   //Получаем эпохи из БД
@@ -316,35 +280,49 @@ exports.getEras = async function(userId){
   return retJson
 }
 
-exports.getImages = async function(){
-  const ret = await Image.findAll()
-                        .then(images=>{return images})
-                        .catch(images=>console.log(images));
-  return ret
+//Пользователь присылает данные о своём ответе на вопрос
+exports.giveAnswer = async function(userId, questionId, answerId){
+
+  const result = await PersonAnswerOption.upsert({
+    idPerson:userId,
+    idQuestion: questionId,
+    idAnswer: answerId
+  }).then(res=>{return true}).catch(err=>{console.log(err); return false})
+  // const ret = await Image.findAll()
+  //                       .then(images=>{return images})
+  //                       .catch(images=>console.log(images));
+  return result
 }
 
-exports.getUserById = async function(id){
-    const ret = await User.findByPk(id,{raw:true})
-                          .then(user=>{return JSON(user, null, 2)})
-                          .catch(err=>console.log(err));
-    return ret 
-}
+// exports.getImages = async function(){
+//   const ret = await Image.findAll()
+//                         .then(images=>{return images})
+//                         .catch(images=>console.log(images));
+//   return ret
+// }
 
-exports.getUserProgresById = async function(id){
+// exports.getUserById = async function(id){
+//     const ret = await User.findByPk(id,{raw:true})
+//                           .then(user=>{return JSON(user, null, 2)})
+//                           .catch(err=>console.log(err));
+//     return ret 
+// }
 
-    const user = await User.findAll({where:{vkId:id},include:Person_Progress})
-                            // .then(user=>{return user})
-                            // .catch(err=>console.log(err));
+// exports.getUserProgresById = async function(id){
 
-    if(!user) return console.log("User Not Found")
-    // console.log(user)
-    console.log(JSON(user, null, 2));
+//     const user = await User.findAll({where:{vkId:id},include:Person_Progress})
+//                             // .then(user=>{return user})
+//                             // .catch(err=>console.log(err));
+
+//     if(!user) return console.log("User Not Found")
+//     // console.log(user)
+//     console.log(JSON(user, null, 2));
 
 
-    // const progr = "";
-    const progr = await user.getPerson_Progresss()
-                            .then(res => {return res})
-                            .catch(err=> {return console.log(err)})
+//     // const progr = "";
+//     const progr = await user.getPerson_Progresss()
+//                             .then(res => {return res})
+//                             .catch(err=> {return console.log(err)})
             
-    return progr 
-}
+//     return progr 
+// }
