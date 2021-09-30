@@ -26,7 +26,7 @@ module.exports.initModels = function(fastify){
           type: Sequelize.STRING,
           allowNull: false
         }
-      });
+    });
 
     ImageFromDb = fastify.sequelize.define("Images",
     {
@@ -39,7 +39,7 @@ module.exports.initModels = function(fastify){
           type: Sequelize.STRING,
           allowNull: false
         }
-      });
+    });
 
     Survey = fastify.sequelize.define("Surveys",
     {
@@ -65,7 +65,7 @@ module.exports.initModels = function(fastify){
           type: Sequelize.STRING,
           allowNull: false
         }
-      });
+    });
 
     Question = fastify.sequelize.define("Questions",
     {
@@ -87,7 +87,7 @@ module.exports.initModels = function(fastify){
         type: Sequelize.STRING,
         allowNull: false
       }
-      });
+    });
 
     AnswerOption = fastify.sequelize.define("AnswerOptions",
     {
@@ -109,7 +109,7 @@ module.exports.initModels = function(fastify){
           type: Sequelize.STRING,
           allowNull: false
         }
-      });
+    });
     
     Person_Answer = fastify.sequelize.define("Person_Answers",
     {
@@ -130,10 +130,9 @@ module.exports.initModels = function(fastify){
       idPerson: {
           type: Sequelize.INTEGER,
           primaryKey: true,
-          autoIncrement: true,
           allowNull: false,
         },
-        isFirstOpen: {
+      isFirstOpen: {
           type: Sequelize.BOOLEAN,
           allowNull: false
         }
@@ -269,20 +268,24 @@ const eraSheme = {
     }
   }
 }
-
 exports.getEras = async function(userId){
-  // let firstImage = await ImageFromDb.findByPk('2');
-  // firstImage.sourceImageLink = 'Не ссылка на исходник';
-  // await firstImage.save();
 
-  // let newFirstImage = await ImageFromDb.findByPk('2');
-  // return newFirstImage
-  //{include: [{model:Survey, include:{model: Question, include:AnswerOption}}, ImageFromDb]}
-  const ret = await Era.findAll({include:[
+  //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
+  let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
+  if(isFirstOpen === null){
+    isFirstOpen = true;
+    Person.create(
+      {
+        idPerson: userId,
+        isFirstOpen: false
+      }
+    ).then(res=>{console.log(res)}).catch(err=>{console.log(err)})
+  }
 
+  //Получаем эпохи из БД
+  const eras = await Era.findAll({include:[
     //Эпоха
     {model: ImageFromDb, as: 'image'},
-
     //Опросы
     {model: Survey, as: 'surveys', include:[
 
@@ -297,19 +300,20 @@ exports.getEras = async function(userId){
         //Варианты ответа
         {model: AnswerOption, as: 'answerOptions'},
 
-        //Вариант ответа пользователя
-        {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson:userId}}
+        //Вариант ответа пользователя, если записи нет, то null. За это отвечает required: false
+        {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson: userId}, required: false}
 
       ]},
     ]},
 
-  ]}).then(eras=>{
-    let postsAsJSON = Serializer.serializeMany(eras, Era, eraSheme);
-    console.log(postsAsJSON)
-    return postsAsJSON
-  })
-  .catch(eras=>console.log(eras));
-  return ret
+  ]}).then(eras=>{return eras}).catch(eras=>console.log(eras));
+
+  const retJson = {
+    isFirstOpen: isFirstOpen,
+    eras:Serializer.serializeMany(eras, Era, eraSheme)
+  }
+
+  return retJson
 }
 
 exports.getImages = async function(){
