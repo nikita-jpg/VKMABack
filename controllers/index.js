@@ -13,13 +13,14 @@ module.exports = {
     async execute(fastify, request, reply) {
         try {
             const userId = request.body.id;
+            console.log(userId)
 
             if(isNaN(userId)){
                 return fastify.response.All(403, "Access denied", reply)
             }
 
             const req = await bd.getEras(userId)
-            return fastify.response.All(200, "req", reply)
+            return fastify.response.All(200, req, reply)
         }
         catch (error) {
             console.log(error)

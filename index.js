@@ -9,7 +9,7 @@ const redis = new Redis({
 
 const fastify = require('fastify')({
     logger: {
-        level: 'error',
+        level: 'info',
         file: `log/${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDay()}.log`
     }
 });

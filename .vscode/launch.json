@@ -29,7 +29,7 @@
                 //Бд
                 "DB_HOST":"127.0.0.1",
                 "DB_PORT":"3307",
-                "DB_NAME":"3307",
+                "DB_NAME":"vkma_db",
                 "DB_USER_NAME":"root",
                 "DB_PASSWORD":"toor",
                 "DB_DIALECT":"mysql" /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
