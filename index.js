@@ -63,12 +63,12 @@ fastify.register(
     {
       instance: 'sequelize',
       sequelizeOptions: {
-        dialect: 'mysql', /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-        database: 'vkma_db',
-        username: 'root',
-        password: 'toor',
-        host: "127.0.0.1",
-        port: 3307,
+        dialect: process.env.DB_DIALECT,
+        database: process.env.DB_NAME,
+        username: process.env.DB_USER_NAME,
+        password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
         logging: false,
         define: {
             timestamps: false
