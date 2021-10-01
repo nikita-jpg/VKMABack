@@ -53,7 +53,7 @@ fastify.register(require('./module/mysql'));
 // Для отправки статики
 const path = require('path');
 fastify.register(require('fastify-static'), {
-    root: path.join(__dirname, 'public'), // public - расположение папки со статикой отнносительно папки с текущим файлом (то есть с папки с index.js)
+    root: path.join(__dirname, 'images'), // images - расположение папки со статикой отнносительно папки с текущим файлом (то есть с папки с index.js)
 })
 
 fastify.register(
