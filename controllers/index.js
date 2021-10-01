@@ -17,18 +17,16 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            const GET_USER = `SELECT * FROM person WHERE vkId = ?;`;
-            let id = request.body.id;
-            
-            // const req = await test.getEras(1)
-            const req = await test.giveAnswer(10,2,1)
+            const userId = request.body.id;
+
+            if(!isNaN(userId)){
+                return fastify.response.All(403, "Access denied", reply)
+            }
+            // const req = await test.giveAnswer(10,2,1)
+            const req = await test.getEras(userId)
             console.log("sdlmdslkmfklewdfmwlEKMD")
-            // const blob = await fastify.mysql.query(GET_IMAGE);
-            // let bufferImage = Buffer.from(blob[0][0].content);
             return fastify.response.All(200, req, reply)
-            // return reply
-            //     .type("image/jpg")
-            //     .send(bufferImage)
+
         }
         catch (error) {
             console.log(error)
