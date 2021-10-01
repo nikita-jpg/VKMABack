@@ -6,10 +6,7 @@ const config = {
     }
 }
 
-const test = require('../module/models');
-const GET_IMAGE = `SELECT content FROM images WHERE id = 7`;
-// fastify.register(require('mysql'));
-// const mysql = require('../module/mysql'); // импорт функции проверки подписи.
+const bd = require('../module/models');
 module.exports = {
     method: "GET",
     auth: true,
@@ -19,14 +16,12 @@ module.exports = {
         try {
             const userId = request.body.id;
 
-            if(!isNaN(userId)){
+            if(isNaN(userId)){
                 return fastify.response.All(403, "Access denied", reply)
             }
-            // const req = await test.giveAnswer(10,2,1)
-            const req = await test.getEras(userId)
-            console.log("sdlmdslkmfklewdfmwlEKMD")
-            return fastify.response.All(200, req, reply)
 
+            const req = await bd.getEras(userId)
+            return fastify.response.All(200, req, reply)
         }
         catch (error) {
             console.log(error)
@@ -34,8 +29,3 @@ module.exports = {
         }
     }
 }
-
-// Такой формат уменьшает вероятность sql-инъекции
-// const GET_USER = `SELECT * FROM users WHERE id = ? AND role = ?;`;
-
-// await fastify.mysql.query(GET_USER, [_user_id, user.role]);
