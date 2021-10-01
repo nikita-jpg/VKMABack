@@ -9,7 +9,7 @@ const redis = new Redis({
 
 const fastify = require('fastify')({
     logger: {
-        level: 'info',
+        level: 'error',
         file: `log/${new Date().getFullYear()}_${new Date().getMonth()}_${new Date().getDay()}.log`
     }
 });
@@ -33,7 +33,9 @@ fastify.register(require('fastify-rate-limit'),
             if (param) {
                 request.sign = param;
                 return param.vk_user_id;
-            } else { return "undefined" }
+            } else { 
+                return "undefined" 
+            }
         },
         errorResponseBuilder: () => { return undefined },
     });
@@ -77,7 +79,7 @@ fastify.register(
 .ready(async () => {
     try {
     // Инициализация моделей
-    const initModels = require('./module/models');
+    const initModels = require('./module/workWithDB');
     try{
         initModels.initModels(fastify);
         fastify.sequelize.sync().then(result=>{

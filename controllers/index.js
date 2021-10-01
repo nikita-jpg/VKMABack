@@ -1,16 +1,14 @@
 // 10 запросов в 5 секунд
 const config = {
     rateLimit: {
-        max: 100,
+        max: 10,
         timeWindow: 5000
     }
 }
 
-const bd = require('../module/models');
+const bd = require('../module/workWithDB');
 module.exports = {
     method: "GET",
-    auth: true,
-    root: false,
     config: config,
     async execute(fastify, request, reply) {
         try {
@@ -21,7 +19,7 @@ module.exports = {
             }
 
             const req = await bd.getEras(userId)
-            return fastify.response.All(200, req, reply)
+            return fastify.response.All(200, "req", reply)
         }
         catch (error) {
             console.log(error)

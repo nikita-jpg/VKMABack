@@ -293,36 +293,3 @@ exports.giveAnswer = async function(userId, questionId, answerId){
   //                       .catch(images=>console.log(images));
   return result
 }
-
-// exports.getImages = async function(){
-//   const ret = await Image.findAll()
-//                         .then(images=>{return images})
-//                         .catch(images=>console.log(images));
-//   return ret
-// }
-
-// exports.getUserById = async function(id){
-//     const ret = await User.findByPk(id,{raw:true})
-//                           .then(user=>{return JSON(user, null, 2)})
-//                           .catch(err=>console.log(err));
-//     return ret 
-// }
-
-// exports.getUserProgresById = async function(id){
-
-//     const user = await User.findAll({where:{vkId:id},include:Person_Progress})
-//                             // .then(user=>{return user})
-//                             // .catch(err=>console.log(err));
-
-//     if(!user) return console.log("User Not Found")
-//     // console.log(user)
-//     console.log(JSON(user, null, 2));
-
-
-//     // const progr = "";
-//     const progr = await user.getPerson_Progresss()
-//                             .then(res => {return res})
-//                             .catch(err=> {return console.log(err)})
-            
-//     return progr 
-// }

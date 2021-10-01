@@ -1,15 +1,13 @@
 const config = {
     rateLimit: {
-        max: 100,
+        max: 30,
         timeWindow: 5000
     }
 }
 
-const bd = require('../module/models');
+const bd = require('../module/workWithDB');
 module.exports = {
     method: "GET",
-    auth: true,
-    root: false,
     config: config,
     async execute(fastify, request, reply) {
         try {

@@ -8,8 +8,6 @@ const config = {
 
 module.exports = {
     method: "GET",
-    auth: true,
-    admin: false,
     config: {},
     async execute(fastify, request, reply) {
         try {
