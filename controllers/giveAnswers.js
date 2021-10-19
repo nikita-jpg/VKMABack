@@ -12,28 +12,20 @@ module.exports = {
     async execute(fastify, request, reply) {
         try {
             const userId = request.body.id;
-            console.log(request.body.userAnswers)
             const userAnswers = request.body.userAnswers;
 
-
-            // const questionId = request.body.userAnswer.questionId;
-            // const answerId = request.query.answerId;
-
-            // console.log(!isNaN(userId))
-            // console.log(!isNaN(questionId))
-            // console.log(!isNaN(answerId))
-
-            if(isNaN(userId) || isNaN(userAnswers)){
+            if(isNaN(userId) || !Array.isArray(userAnswers)){
                 return fastify.response.All(403, "Access denied", reply)
             }
 
-            // const req =""
+            for(let i=0;i<userAnswers.length;i++){
+                if(!await bd.giveAnswer(userId, userAnswers[i].idQuestion, userAnswers[i].userAnswer.idAnswerOption)){
+                    fastify.response.All(500, "This is very bad =(", reply)
+                }
+            }
 
-            const req = userAnswers.map((answer)=>{
-                await bd.giveAnswer(userId, answer.idQuestion, answer.userAnswer.idAnswerOption)
-            })
 
-            return fastify.response.All(200, req, reply)
+            return fastify.response.All(200, "saved", reply)
 
         }
         catch (error) {
