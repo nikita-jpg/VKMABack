@@ -27,6 +27,8 @@ module.exports = {
                 return fastify.response.All(403, "Access denied", reply)
             }
 
+            // const req =""
+
             const req = userAnswers.map((answer)=>{
                 await bd.giveAnswer(userId, answer.idQuestion, answer.userAnswer.idAnswerOption)
             })
