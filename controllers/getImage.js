@@ -12,7 +12,6 @@ module.exports = {
     async execute(fastify, request, reply) {
         try {
             const imageName = request.query.imageName;
-            console.log(imageName)
             return reply.sendFile(imageName)
         }
         catch (error) {

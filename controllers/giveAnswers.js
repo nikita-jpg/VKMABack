@@ -11,7 +11,7 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            const userId = request.body.id;
+            const userId = Number(request.body.id);
             const userAnswers = request.body.userAnswers;
 
             if(isNaN(userId) || !Array.isArray(userAnswers)){
@@ -19,7 +19,7 @@ module.exports = {
             }
 
             for(let i=0;i<userAnswers.length;i++){
-                if(!await bd.giveAnswer(userId, userAnswers[i].idQuestion, userAnswers[i].userAnswer.idAnswerOption)){
+                if(!await bd.giveAnswer(userId,userAnswers[i].idSurvey, userAnswers[i].idQuestion, userAnswers[i].idAnswerOption)){
                     fastify.response.All(500, "This is very bad =(", reply)
                 }
             }
@@ -29,6 +29,7 @@ module.exports = {
 
         }
         catch (error) {
+            console.log("GiveAnswer Error")
             console.log(error)
             fastify.response.All(500, "This is very bad =(", reply)
         }

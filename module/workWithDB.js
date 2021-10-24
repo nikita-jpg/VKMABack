@@ -118,7 +118,7 @@ AnswerOption = fastify.sequelize.define("AnswerOptions",
 Person = fastify.sequelize.define("Persons",
 {
   idUser: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       primaryKey: true,
       allowNull: false,
     },
@@ -132,7 +132,7 @@ Person = fastify.sequelize.define("Persons",
 UserAnswers = fastify.sequelize.define("UserAnswers",
 {
   idUser: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.FLOAT,
       primaryKey: true,
       allowNull: false,
     },
@@ -278,8 +278,8 @@ const answerOptionSheme = {
   // }
 }
 const userAnswersSheme = {
-  include: ['@all']
-  // exclude: ['imageName'],
+  include: ['@all'],
+  exclude: ['idUser'],
   // assoc:{
   //   image:{
   //     include:['imageName','sourceImageLink']
@@ -327,6 +327,7 @@ getAnswerOptions = async function(){
 
   return Serializer.serializeMany(answerOptions, AnswerOption, answerOptionSheme)
 }
+
 //Получаем ответы пользователя
 getUserAnswers = async function(idUser){
   const userAnswers = await UserAnswers
@@ -338,13 +339,26 @@ getUserAnswers = async function(idUser){
   return Serializer.serializeMany(userAnswers, UserAnswers, userAnswersSheme)
 }
 
-exports.getStartDate = async function(){
+exports.getStartDate = async function(userId){
+  //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
+  let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
+  console.log(isFirstOpen)
+  if(isFirstOpen === null){
+    isFirstOpen = true;
+    Person.create(
+      {
+        idUser: userId,
+        isFirstOpen: false
+      }
+    ).catch(err=>{console.log(err)})
+  }
+
 
   const eras = await getEras()
   const surveys = await getSurveys()
   const questions = await getQuestions()
   const answerOptions = await getAnswerOptions()
-  const userAnswers = await getUserAnswers(2)
+  const userAnswers = await getUserAnswers(userId)
 
   return{
     Eras:eras,
@@ -405,15 +419,13 @@ exports.getStartDate = async function(){
 // }
 
 //Пользователь присылает данные о своём ответе на вопрос
-exports.giveAnswer = async function(userId, questionId, answerId){
-
-  const result = await PersonAnswerOption.upsert({
-    idPerson:userId,
+exports.giveAnswer = async function(userId, surveyId, questionId, answerId){
+  const result = await UserAnswers.upsert({
+    idUser:userId,
+    idSurvey:surveyId,
     idQuestion: questionId,
-    idAnswer: answerId
+    idAnswerOption: answerId
   }).then(res=>{return true}).catch(err=>{console.log(err); return false})
-  // const ret = await Image.findAll()
-  //                       .then(images=>{return images})
-  //                       .catch(images=>console.log(images));
+
   return result
 }

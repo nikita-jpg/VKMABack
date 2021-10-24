@@ -12,14 +12,13 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            // const userId = request.body.id;
-            // console.log(userId)
+            const userId = Number(request.body.id);
 
-            // if(isNaN(userId)){
-            //     return fastify.response.All(403, "Access denied", reply)
-            // }
+            if(isNaN(userId)){
+                return fastify.response.All(403, "Access denied", reply)
+            }
 
-            const req = await bd.getStartDate()
+            const req = await bd.getStartDate(userId)
             return fastify.response.All(200, req, reply)
         }
         catch (error) {

@@ -22,23 +22,23 @@ fastify.register(require('fastify-cors'), {
 
 fastify.register(require('fastify-formbody'));
 
-// fastify.register(require('fastify-rate-limit'),
-//     {
-//         global: false, // Не используем глобальные лимиты.
-//         redis: redis, // Используем redis для хранения данных о лимитах.
-//         keyGenerator: (request) => {
-//             // Проверяем подпись параметров запуска.
-//             // Параметры передаются в header в параметре Authorization
-//             let param = sign(request.headers.authorization); 
-//             if (param) {
-//                 request.sign = param;
-//                 return param.vk_user_id;
-//             } else { 
-//                 return "undefined" 
-//             }
-//         },
-//         errorResponseBuilder: () => { return undefined },
-//     });
+fastify.register(require('fastify-rate-limit'),
+    {
+        global: false, // Не используем глобальные лимиты.
+        redis: redis, // Используем redis для хранения данных о лимитах.
+        keyGenerator: (request) => {
+            // Проверяем подпись параметров запуска.
+            // Параметры передаются в header в параметре Authorization
+            let param = sign(request.headers.authorization); 
+            if (param) {
+                request.sign = param;
+                return param.vk_user_id;
+            } else { 
+                return "undefined" 
+            }
+        },
+        errorResponseBuilder: () => { return undefined },
+    });
 
 // Автоматический рутинг, основанный на файлах и папках
 fastify.register(require('fastify-easy-route'), {
