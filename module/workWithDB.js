@@ -255,16 +255,8 @@ const eraSheme = {
   }
 }
 
-const erasSheme = {
-    include: ['@all', 'image'],
-    exclude: ['imageName'],
-    assoc:{
-      image:{
-        include:['imageName','sourceImageLink']
-      }
-    }
-}
-const surveysSheme = {
+
+const defaultSheme = {
   include: ['@all', 'image'],
   exclude: ['imageName'],
   assoc:{
@@ -272,6 +264,15 @@ const surveysSheme = {
       include:['imageName','sourceImageLink']
     }
   }
+}
+const answerOptionSheme = {
+  include: ['@all']
+  // exclude: ['imageName'],
+  // assoc:{
+  //   image:{
+  //     include:['imageName','sourceImageLink']
+  //   }
+  // }
 }
 
 //Получаем эры
@@ -282,29 +283,52 @@ getEras = async function(){
   .catch(eras=>console.log(eras));
 
 
-  return Serializer.serializeMany(eras, Era, erasSheme)
+  return Serializer.serializeMany(eras, Era, defaultSheme)
 }
 //Получаем опросы
 getSurveys = async function(){
-  const survey = await Survey
+  const surveys = await Survey
   .findAll({include:{model: ImageFromDb, as: 'image'}})
   .then(surveys=>{return surveys})
   .catch(surveys=>console.log(surveys));
 
 
-  return Serializer.serializeMany(survey, Survey, surveysSheme)
+  return Serializer.serializeMany(surveys, Survey, defaultSheme)
 }
+//Получаем вопросы
+getQuestions = async function(){
+  const questions = await Question
+  .findAll({include:{model: ImageFromDb, as: 'image'}})
+  .then(questions=>{return questions})
+  .catch(questions=>console.log(questions));
 
+
+  return Serializer.serializeMany(questions, Question, defaultSheme)
+}
+//Получаем Варианты ответов
+getAnswerOptions = async function(){
+  const answerOptions = await AnswerOption
+  .findAll()
+  .then(answerOptions=>{return answerOptions})
+  .catch(answerOptions=>console.log(answerOptions));
+
+
+  return Serializer.serializeMany(answerOptions, AnswerOption, answerOptionSheme)
+}
 
 
 exports.getStartDate = async function(){
 
   const eras = await getEras()
   const surveys = await getSurveys()
+  const questions = await getQuestions()
+  const answerOptions = await getAnswerOptions()
 
   return{
     Eras:eras,
-    Surveys:surveys
+    Surveys:surveys,
+    Questions:questions,
+    AnswerOptions:answerOptions
   }
 }
 
