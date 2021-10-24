@@ -19,7 +19,7 @@ module.exports = {
             //     return fastify.response.All(403, "Access denied", reply)
             // }
 
-            const req = await bd.getEras(1)
+            const req = await bd.getStartDate()
             return fastify.response.All(200, req, reply)
         }
         catch (error) {

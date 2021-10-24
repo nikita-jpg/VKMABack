@@ -256,28 +256,56 @@ const eraSheme = {
 }
 
 const erasSheme = {
-    //Эпоха
     include: ['@all', 'image'],
-    exclude: ['@fk'],
+    exclude: ['imageName'],
     assoc:{
       image:{
         include:['imageName','sourceImageLink']
       }
     }
 }
+const surveysSheme = {
+  include: ['@all', 'image'],
+  exclude: ['imageName'],
+  assoc:{
+    image:{
+      include:['imageName','sourceImageLink']
+    }
+  }
+}
 
 //Получаем эры
-exports.getEras = async function(){
+getEras = async function(){
   const eras = await Era
   .findAll({include:{model: ImageFromDb, as: 'image'}})
   .then(eras=>{return eras})
   .catch(eras=>console.log(eras));
 
-    const retJson = {
-    eras:Serializer.serializeMany(eras, Era, erasSheme)
-  }
 
-  return retJson
+  return Serializer.serializeMany(eras, Era, erasSheme)
+}
+//Получаем опросы
+getSurveys = async function(){
+  const survey = await Survey
+  .findAll({include:{model: ImageFromDb, as: 'image'}})
+  .then(surveys=>{return surveys})
+  .catch(surveys=>console.log(surveys));
+
+
+  return Serializer.serializeMany(survey, Survey, surveysSheme)
+}
+
+
+
+exports.getStartDate = async function(){
+
+  const eras = await getEras()
+  const surveys = await getSurveys()
+
+  return{
+    Eras:eras,
+    Surveys:surveys
+  }
 }
 
 //Получаем стартовые данные
