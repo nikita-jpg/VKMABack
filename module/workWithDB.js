@@ -117,7 +117,7 @@ AnswerOption = fastify.sequelize.define("AnswerOptions",
 //Пользователь
 Person = fastify.sequelize.define("Persons",
 {
-  idPerson: {
+  idUser: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
@@ -129,9 +129,9 @@ Person = fastify.sequelize.define("Persons",
 });
 
 //Ответы пользователя на вопросы
-UsersAbswers = fastify.sequelize.define("UsersAbswers",
+UserAnswers = fastify.sequelize.define("UserAnswers",
 {
-  idPerson: {
+  idUser: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
@@ -148,7 +148,7 @@ UsersAbswers = fastify.sequelize.define("UsersAbswers",
     },
   idAnswerOption: {
       type: Sequelize.INTEGER,
-      primaryKey: true,
+      primaryKey: false,
       allowNull: false
     }
 });
@@ -161,6 +161,9 @@ const configForImage = {
   onDelete:'NO ACTION'
 }
 //Сделать!!!!, выше готово!!!!
+
+
+
 //Картинка и эпоха
 ImageFromDb.hasOne(Era,{foreignKey: 'imageName'})
 Era.belongsTo(ImageFromDb,{...configForImage})
@@ -186,8 +189,8 @@ Survey.hasMany(Question,{foreignKey: 'idSurvey', as:'questions', onUpdate:'CASCA
 Question.belongsTo(Survey,{foreignKey: 'idSurvey'})
 
 //Опрос и ответ пользователя
-Survey.hasMany(UsersAbswers,{foreignKey: 'idSurvey', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-UsersAbswers.belongsTo(Survey,{foreignKey: 'idSurvey'})
+Survey.hasMany(UserAnswers,{foreignKey: 'idSurvey', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+UserAnswers.belongsTo(Survey,{foreignKey: 'idSurvey'})
 
 
 
@@ -196,15 +199,15 @@ Question.hasMany(AnswerOption,{foreignKey: 'idQuestion', as:'answerOptions', onU
 AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 
 //Вопрос и ответ пользователя
-Question.hasOne(UsersAbswers,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-UsersAbswers.belongsTo(Question,{foreignKey: 'idQuestion'})
+Question.hasOne(UserAnswers,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+UserAnswers.belongsTo(Question,{foreignKey: 'idQuestion'})
 
 
 
 
-//Варианты ответа и ответ пользователя
-AnswerOption.hasOne(UsersAbswers,{foreignKey: 'idAnswerOption', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-UsersAbswers.belongsTo(AnswerOption,{foreignKey: 'idAnswerOption'})
+// //Варианты ответа и ответ пользователя
+// AnswerOption.hasOne(UserAnswers,{foreignKey: 'idAnswerOption', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+// UserAnswers.belongsTo(AnswerOption,{foreignKey: 'idAnswerOption'})
 
 }
 
@@ -274,6 +277,15 @@ const answerOptionSheme = {
   //   }
   // }
 }
+const userAnswersSheme = {
+  include: ['@all']
+  // exclude: ['imageName'],
+  // assoc:{
+  //   image:{
+  //     include:['imageName','sourceImageLink']
+  //   }
+  // }
+}
 
 //Получаем эры
 getEras = async function(){
@@ -305,7 +317,7 @@ getQuestions = async function(){
 
   return Serializer.serializeMany(questions, Question, defaultSheme)
 }
-//Получаем Варианты ответов
+//Получаем варианты ответов
 getAnswerOptions = async function(){
   const answerOptions = await AnswerOption
   .findAll()
@@ -315,7 +327,16 @@ getAnswerOptions = async function(){
 
   return Serializer.serializeMany(answerOptions, AnswerOption, answerOptionSheme)
 }
+//Получаем ответы пользователя
+getUserAnswers = async function(idUser){
+  const userAnswers = await UserAnswers
+  .findAll({where:{idUser: idUser}, required: false})
+  .then(answerOptions=>{return answerOptions})
+  .catch(answerOptions=>console.log(answerOptions));
 
+
+  return Serializer.serializeMany(userAnswers, UserAnswers, userAnswersSheme)
+}
 
 exports.getStartDate = async function(){
 
@@ -323,12 +344,14 @@ exports.getStartDate = async function(){
   const surveys = await getSurveys()
   const questions = await getQuestions()
   const answerOptions = await getAnswerOptions()
+  const userAnswers = await getUserAnswers(2)
 
   return{
     Eras:eras,
     Surveys:surveys,
     Questions:questions,
-    AnswerOptions:answerOptions
+    AnswerOptions:answerOptions,
+    UserAnswers:userAnswers
   }
 }
 
