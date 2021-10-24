@@ -129,20 +129,26 @@ Person = fastify.sequelize.define("Persons",
 });
 
 //Ответы пользователя на вопросы
-PersonAnswerOption = fastify.sequelize.define("PersonAnswerOptions",
+UsersAbswers = fastify.sequelize.define("UsersAbswers",
 {
   idPerson: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
+  idSurvey: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false
+    },
   idQuestion: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false
     },
-  idAnswer: {
+  idAnswerOption: {
       type: Sequelize.INTEGER,
+      primaryKey: true,
       allowNull: false
     }
 });
@@ -154,7 +160,7 @@ const configForImage = {
   onUpdate:'CASCADE', 
   onDelete:'NO ACTION'
 }
-
+//Сделать!!!!, выше готово!!!!
 //Картинка и эпоха
 ImageFromDb.hasOne(Era,{foreignKey: 'imageName'})
 Era.belongsTo(ImageFromDb,{...configForImage})
@@ -167,21 +173,39 @@ Survey.belongsTo(ImageFromDb,{...configForImage})
 ImageFromDb.hasOne(Question,{foreignKey: 'imageName'})
 Question.belongsTo(ImageFromDb,{...configForImage})
 
+
+
 //Эпоха и опрос
 Era.hasMany(Survey, {foreignKey: 'idEra', as:'surveys', onUpdate:'CASCADE',onDelete:'CASCADE'})
 Survey.belongsTo(Era,{foreignKey: 'idEra'})
 
+
+
 //Опрос и вопрос
 Survey.hasMany(Question,{foreignKey: 'idSurvey', as:'questions', onUpdate:'CASCADE',onDelete:'CASCADE'})
 Question.belongsTo(Survey,{foreignKey: 'idSurvey'})
+
+//Опрос и ответ пользователя
+Survey.hasMany(UsersAbswers,{foreignKey: 'idSurvey', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+UsersAbswers.belongsTo(Survey,{foreignKey: 'idSurvey'})
+
+
 
 //Вопрос и варианты ответа
 Question.hasMany(AnswerOption,{foreignKey: 'idQuestion', as:'answerOptions', onUpdate:'CASCADE',onDelete:'CASCADE'})
 AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 
 //Вопрос и ответ пользователя
-Question.hasOne(PersonAnswerOption,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-PersonAnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
+Question.hasOne(UsersAbswers,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+UsersAbswers.belongsTo(Question,{foreignKey: 'idQuestion'})
+
+
+
+
+//Варианты ответа и ответ пользователя
+AnswerOption.hasOne(UsersAbswers,{foreignKey: 'idAnswerOption', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
+UsersAbswers.belongsTo(AnswerOption,{foreignKey: 'idAnswerOption'})
+
 }
 
 const eraSheme = {
@@ -231,54 +255,79 @@ const eraSheme = {
   }
 }
 
-//Получаем стартовые данные
-exports.getEras = async function(userId){
-
-  //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
-  let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
-  if(isFirstOpen === null){
-    isFirstOpen = true;
-    Person.create(
-      {
-        idPerson: userId,
-        isFirstOpen: false
-      }
-    ).catch(err=>{console.log(err)})
-  }
-
-  //Получаем эпохи из БД
-  const eras = await Era.findAll({include:[
+const erasSheme = {
     //Эпоха
-    {model: ImageFromDb, as: 'image'},
-    //Опросы
-    {model: Survey, as: 'surveys', include:[
+    include: ['@all', 'image'],
+    exclude: ['@fk'],
+    assoc:{
+      image:{
+        include:['imageName','sourceImageLink']
+      }
+    }
+}
 
-      //Картинка опроса
-      {model: ImageFromDb, as: 'image'},
+//Получаем эры
+exports.getEras = async function(){
+  const eras = await Era
+  .findAll({include:{model: ImageFromDb, as: 'image'}})
+  .then(eras=>{return eras})
+  .catch(eras=>console.log(eras));
 
-      //Вопросы
-      {model: Question, as: 'questions',include:[
-        
-        {model: ImageFromDb, as: 'image'},
-
-        //Варианты ответа
-        {model: AnswerOption, as: 'answerOptions'},
-
-        //Вариант ответа пользователя, если записи нет, то null. За это отвечает required: false
-        {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson: userId}, required: false}
-
-      ]},
-    ]},
-
-  ]}).then(eras=>{return eras}).catch(eras=>console.log(eras));
-
-  const retJson = {
-    isFirstOpen: isFirstOpen,
-    eras:Serializer.serializeMany(eras, Era, eraSheme)
+    const retJson = {
+    eras:Serializer.serializeMany(eras, Era, erasSheme)
   }
 
   return retJson
 }
+
+//Получаем стартовые данные
+// exports.getEras = async function(userId){
+
+//   //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
+//   let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
+//   if(isFirstOpen === null){
+//     isFirstOpen = true;
+//     Person.create(
+//       {
+//         idPerson: userId,
+//         isFirstOpen: false
+//       }
+//     ).catch(err=>{console.log(err)})
+//   }
+
+  //Получаем эпохи из БД
+//   const eras = await Era.findAll({include:[
+//     //Эпоха
+//     {model: ImageFromDb, as: 'image'},
+//     // //Опросы
+//     // {model: Survey, as: 'surveys', include:[
+
+//     //   //Картинка опроса
+//     //   {model: ImageFromDb, as: 'image'},
+
+//     //   //Вопросы
+//     //   {model: Question, as: 'questions',include:[
+        
+//     //     {model: ImageFromDb, as: 'image'},
+
+//     //     //Варианты ответа
+//     //     {model: AnswerOption, as: 'answerOptions'},
+
+//     //     //Вариант ответа пользователя, если записи нет, то null. За это отвечает required: false
+//     //     {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson: userId}, required: false}
+
+//     //   ]},
+//     // ]},
+
+//   ]}).then(eras=>{return eras}).catch(eras=>console.log(eras));
+
+//   const retJson = {
+//     isFirstOpen: isFirstOpen,
+//     eras:Serializer.serializeMany(eras, Era, eraSheme)
+//   }
+
+//   return retJson
+// }
 
 //Пользователь присылает данные о своём ответе на вопрос
 exports.giveAnswer = async function(userId, questionId, answerId){

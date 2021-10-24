@@ -12,12 +12,12 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            const userId = request.body.id;
-            console.log(userId)
+            // const userId = request.body.id;
+            // console.log(userId)
 
-            if(isNaN(userId)){
-                return fastify.response.All(403, "Access denied", reply)
-            }
+            // if(isNaN(userId)){
+            //     return fastify.response.All(403, "Access denied", reply)
+            // }
 
             const req = await bd.getEras(1)
             return fastify.response.All(200, req, reply)

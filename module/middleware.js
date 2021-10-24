@@ -3,8 +3,8 @@ module.exports = {
     try {
       // Получение id из объекта sign который 
       // был инициализирован после проверки подписи
-      let id = request?.sign.vk_user_id;
-      request.body = { ...{ id: id }, ...request.body };
+      // let id = request?.sign.vk_user_id;
+      // request.body = { ...{ id: id }, ...request.body };
 
       // let _auth = command?.auth; // true
       // if (id && _auth) {
