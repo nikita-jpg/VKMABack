@@ -118,12 +118,12 @@ AnswerOption = fastify.sequelize.define("AnswerOptions",
 Person = fastify.sequelize.define("Persons",
 {
   idUser: {
-      type: Sequelize.FLOAT,
+      type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
   isFirstOpen: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.INTEGER,
       allowNull: false
     }
 });
@@ -132,7 +132,7 @@ Person = fastify.sequelize.define("Persons",
 UserAnswers = fastify.sequelize.define("UserAnswers",
 {
   idUser: {
-      type: Sequelize.FLOAT,
+      type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
@@ -287,6 +287,23 @@ const userAnswersSheme = {
   // }
 }
 
+
+getUserData = async function(idUser){
+  const user =  await Person
+  .findByPk(idUser)
+  .then(user=>{return user})
+  .catch(user=>console.log(user));
+
+  if(user.isFirstOpen === 1){
+    await Person.upsert({
+      idUser:idUser,
+      isFirstOpen:false
+    }).then(res=>{return true}).catch(err=>{console.log(err); return false})
+  }
+
+  return Serializer.serializeMany([user], Person, userAnswersSheme)[0]
+}
+
 //Получаем эры
 getEras = async function(){
   const eras = await Era
@@ -341,19 +358,18 @@ getUserAnswers = async function(idUser){
 
 exports.getStartDate = async function(userId){
   //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
-  let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
-  console.log(isFirstOpen)
-  if(isFirstOpen === null){
-    isFirstOpen = true;
+  let user = await Person.findByPk(userId).then(res=>{return res}).catch(res=>{return null})
+  if(user === null){
     Person.create(
       {
         idUser: userId,
-        isFirstOpen: false
+        isFirstOpen: true
       }
     ).catch(err=>{console.log(err)})
   }
 
 
+  const userData = await getUserData(userId)
   const eras = await getEras()
   const surveys = await getSurveys()
   const questions = await getQuestions()
@@ -361,6 +377,7 @@ exports.getStartDate = async function(userId){
   const userAnswers = await getUserAnswers(userId)
 
   return{
+    UserData:userData,
     Eras:eras,
     Surveys:surveys,
     Questions:questions,
