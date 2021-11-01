@@ -356,25 +356,13 @@ getUserAnswers = async function(idUser){
   return Serializer.serializeMany(userAnswers, UserAnswers, userAnswersSheme)
 }
 
-exports.getStartDate = async function(userId){
-  //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
-  let user = await Person.findByPk(userId).then(res=>{return res}).catch(res=>{return null})
-  if(user === null){
-    Person.create(
-      {
-        idUser: userId,
-        isFirstOpen: true
-      }
-    ).catch(err=>{console.log(err)})
-  }
-
-
-  const userData = await getUserData(userId)
+sendStartData = async function(idUser){
+  const userData = await getUserData(idUser)
   const eras = await getEras()
   const surveys = await getSurveys()
   const questions = await getQuestions()
   const answerOptions = await getAnswerOptions()
-  const userAnswers = await getUserAnswers(userId)
+  const userAnswers = await getUserAnswers(idUser)
 
   return{
     UserData:userData,
@@ -384,6 +372,48 @@ exports.getStartDate = async function(userId){
     AnswerOptions:answerOptions,
     UserAnswers:userAnswers
   }
+}
+
+exports.getStartDate = async function(userId){
+
+  let ret;
+
+  //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
+  let user = await Person.findByPk(userId)
+  .then(res=>{return res})
+  .catch(res=>{console.log(res + "err"); return null})
+  if(user === null){
+    await Person.create(
+      {
+        idUser: userId,
+        isFirstOpen: true
+      }
+    )
+    .then(res=>{
+      ret = sendStartData(userId)
+    })
+    .catch(err=>{console.log(err + " err")})
+  }else{
+    ret = sendStartData(userId)
+  }
+
+
+  // const userData = await getUserData(userId)
+  // const eras = await getEras()
+  // const surveys = await getSurveys()
+  // const questions = await getQuestions()
+  // const answerOptions = await getAnswerOptions()
+  // const userAnswers = await getUserAnswers(userId)
+
+  return ret
+  // return{
+  //   UserData:userData,
+  //   Eras:eras,
+  //   Surveys:surveys,
+  //   Questions:questions,
+  //   AnswerOptions:answerOptions,
+  //   UserAnswers:userAnswers
+  // }
 }
 
 //Получаем стартовые данные

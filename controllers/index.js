@@ -12,7 +12,9 @@ module.exports = {
     config: config,
     async execute(fastify, request, reply) {
         try {
-            const userId = Number(request.body.id);
+            console.log("getData")
+            // const userId = Number(request.body.id);
+            const userId = Number(1);
 
             if(isNaN(userId)){
                 return fastify.response.All(403, "Access denied", reply)
