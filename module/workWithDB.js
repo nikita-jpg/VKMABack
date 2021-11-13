@@ -84,10 +84,6 @@ Question = fastify.sequelize.define("Questions",
   idSurvey: {
     type: Sequelize.INTEGER,
     allowNull: false
-  },
-  imageName: {
-    type: Sequelize.STRING,
-    allowNull: false
   }
 });
 
@@ -172,10 +168,6 @@ Era.belongsTo(ImageFromDb,{...configForImage})
 ImageFromDb.hasOne(Survey,{foreignKey: 'imageName'})
 Survey.belongsTo(ImageFromDb,{...configForImage})
 
-//Картинка и вопрос
-ImageFromDb.hasOne(Question,{foreignKey: 'imageName'})
-Question.belongsTo(ImageFromDb,{...configForImage})
-
 
 
 //Эпоха и опрос
@@ -233,13 +225,9 @@ const eraSheme = {
   
         //Вопросы
         questions:{
-          include: ['@all', 'image', 'answerOptions', 'userAnswer'],
+          include: ['@all','answerOptions', 'userAnswer'],
           exclude: ['idSurvey','imageName'],
           assoc:{
-
-            image:{
-              include:['imageName','sourceImageLink']
-            },
 
             //Варианты ответа
             answerOptions:{
@@ -327,7 +315,7 @@ getSurveys = async function(){
 //Получаем вопросы
 getQuestions = async function(){
   const questions = await Question
-  .findAll({include:{model: ImageFromDb, as: 'image'}})
+  .findAll()
   .then(questions=>{return questions})
   .catch(questions=>console.log(questions));
 
