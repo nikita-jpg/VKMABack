@@ -455,6 +455,7 @@ exports.getStartDate = async function(userId){
 
 //Пользователь присылает данные о своём ответе на вопрос
 exports.giveAnswer = async function(userId, surveyId, questionId, answerId){
+
   const result = await UserAnswers.upsert({
     idUser:userId,
     idSurvey:surveyId,
@@ -463,4 +464,20 @@ exports.giveAnswer = async function(userId, surveyId, questionId, answerId){
   }).then(res=>{return true}).catch(err=>{console.log(err); return false})
 
   return result
+}
+
+exports.clearUserSurveyAnswers = async function(userId, surveyId){
+
+  const resultDelete = await UserAnswers.destroy({
+    where: {
+      idUser:userId,
+      idSurvey:surveyId,
+    }
+  })
+    .then(res=>{return true})
+    .catch(err=>{console.log(err); return false})
+
+  console.log(resultDelete)
+
+  return resultDelete
 }
