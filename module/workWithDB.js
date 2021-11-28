@@ -194,13 +194,6 @@ AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
 Question.hasOne(UserAnswers,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
 UserAnswers.belongsTo(Question,{foreignKey: 'idQuestion'})
 
-
-
-
-// //Варианты ответа и ответ пользователя
-// AnswerOption.hasOne(UserAnswers,{foreignKey: 'idAnswerOption', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-// UserAnswers.belongsTo(AnswerOption,{foreignKey: 'idAnswerOption'})
-
 }
 
 const eraSheme = {
@@ -385,73 +378,9 @@ exports.getStartDate = async function(userId){
     ret = sendStartData(userId)
   }
 
-
-  // const userData = await getUserData(userId)
-  // const eras = await getEras()
-  // const surveys = await getSurveys()
-  // const questions = await getQuestions()
-  // const answerOptions = await getAnswerOptions()
-  // const userAnswers = await getUserAnswers(userId)
-
   return ret
-  // return{
-  //   UserData:userData,
-  //   Eras:eras,
-  //   Surveys:surveys,
-  //   Questions:questions,
-  //   AnswerOptions:answerOptions,
-  //   UserAnswers:userAnswers
-  // }
 }
 
-//Получаем стартовые данные
-// exports.getEras = async function(userId){
-
-//   //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
-//   let isFirstOpen = await Person.findByPk(userId).then(res=>{return res.isFirstOpen}).catch(res=>{return null})
-//   if(isFirstOpen === null){
-//     isFirstOpen = true;
-//     Person.create(
-//       {
-//         idPerson: userId,
-//         isFirstOpen: false
-//       }
-//     ).catch(err=>{console.log(err)})
-//   }
-
-  //Получаем эпохи из БД
-//   const eras = await Era.findAll({include:[
-//     //Эпоха
-//     {model: ImageFromDb, as: 'image'},
-//     // //Опросы
-//     // {model: Survey, as: 'surveys', include:[
-
-//     //   //Картинка опроса
-//     //   {model: ImageFromDb, as: 'image'},
-
-//     //   //Вопросы
-//     //   {model: Question, as: 'questions',include:[
-        
-//     //     {model: ImageFromDb, as: 'image'},
-
-//     //     //Варианты ответа
-//     //     {model: AnswerOption, as: 'answerOptions'},
-
-//     //     //Вариант ответа пользователя, если записи нет, то null. За это отвечает required: false
-//     //     {model: PersonAnswerOption, as: 'userAnswer', where:{idPerson: userId}, required: false}
-
-//     //   ]},
-//     // ]},
-
-//   ]}).then(eras=>{return eras}).catch(eras=>console.log(eras));
-
-//   const retJson = {
-//     isFirstOpen: isFirstOpen,
-//     eras:Serializer.serializeMany(eras, Era, eraSheme)
-//   }
-
-//   return retJson
-// }
 
 //Пользователь присылает данные о своём ответе на вопрос
 exports.giveAnswer = async function(userId, surveyId, questionId, answerId){
@@ -476,8 +405,6 @@ exports.clearUserSurveyAnswers = async function(userId, surveyId){
   })
     .then(res=>{return true})
     .catch(err=>{console.log(err); return false})
-
-  console.log(resultDelete)
 
   return resultDelete
 }

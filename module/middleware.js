@@ -15,7 +15,7 @@ module.exports = {
     catch (error) {
       console.log(error)
       fastify.log.error(error);
-      return fastify.response.All(500, { message: `500 Internal Server Error` }, reply);
+      return fastify.response.All(400, { message: `400 You are not from VK` }, reply);
     }
  }
 }

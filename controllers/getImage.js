@@ -2,7 +2,7 @@
 const config = {
     rateLimit: {
         max: 100,
-        timeWindow: 5000
+        timeWindow: 2000
     }
 }
 
