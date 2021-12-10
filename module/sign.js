@@ -14,7 +14,7 @@ module.exports = (_token) => {
         });
         const stringParams = qs.stringify(ordered);
         const paramsHash = crypto
-            .createHmac('sha256', process.env.SECRET_CODE)
+            .createHmac('sha256', "4kzspMUxNodCB9w28uI7")
             .update(stringParams)
             .digest()
             .toString('base64')

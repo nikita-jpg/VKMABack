@@ -10,11 +10,11 @@ const fastifyMySQL = (fastify, options, next) => {
 
     try {
         transporter = createPool({
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            user: process.env.DB_NAME,
-            database: process.env.DB_DATABASE,
-            password: process.env.DB_PASSWORD,
+            host: "127.0.0.1",
+            port: "3307",
+            user: "root",
+            database: "vkma_db",
+            password: "toor",
             charset: 'utf8mb4',
             waitForConnections: true,
             connectionLimit: 100,

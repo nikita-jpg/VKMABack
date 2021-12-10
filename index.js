@@ -1,10 +1,10 @@
 const sign = require('./module/sign'); // импорт функции проверки подписи.
 const Redis = require('ioredis'); // импорт либы для использования redis.
 const redis = new Redis({
-    connectionName: process.env.REDIS_CONNECTION_NAME,
-    host: process.env.REDIS_HOST,
-    port: +process.env.REDIS_PORT,
-    connectTimeout: +process.env.REDIS_TIMEOUT
+    connectionName: "RAID_LIMIT",
+    host: "localhost",
+    port: +6379,
+    connectTimeout: +500
 })
 
 const fastify = require('fastify')({
@@ -63,12 +63,12 @@ fastify.register(
     {
       instance: 'sequelize',
       sequelizeOptions: {
-        dialect: process.env.DB_DIALECT,
-        database: process.env.DB_NAME,
-        username: process.env.DB_USER_NAME,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
+        dialect: "mysql",
+        database: "vkma_db",
+        username: "root",
+        password: "toor",
+        host: "127.0.0.1",
+        port: "3307",
         logging: false,
         define: {
             timestamps: false
@@ -99,12 +99,12 @@ fastify.register(
 // Функция запуска сервера
 const start = () => {
     try {
-        fastify.listen(process.env.PORT, process.env.IP, (error) => {
+        fastify.listen(18301, "0.0.0.0", (error) => {
             if (error) {
                 fastify.log.error(error);
                 process.exit(1);
             }
-            console.log(`Server listening on http://127.0.0.1:${process.env.PORT}`)
+            console.log(`Server listening on http://127.0.0.1:18301`)
         })
     }
     catch (error) {
