@@ -11,7 +11,6 @@ module.exports = {
   method: "GET",
   config: config,
   async execute(fastify, request, reply) {
-    console.log("I am work");
     try {
       const userId = Number(request.body.id);
 

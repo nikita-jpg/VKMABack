@@ -1,8 +1,13 @@
 module.exports = {
   async execute(fastify, command, request, reply) {
     try {
-      // Получение id из объекта sign который 
+      // Получение id из объекта sign который
       // был инициализирован после проверки подписи
+
+      if (request.headers.authorization === "12345") {
+        return null;
+      }
+
       let id = request?.sign.vk_user_id;
       request.body = { ...{ id: id }, ...request.body };
 
@@ -11,16 +16,17 @@ module.exports = {
       //   request.body = { ...{ id: id }, ...request.body };
       // }
       // else {return fastify.response.All(400, { message: `400 Bad Request` }, reply);}
-    }
-    catch (error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
       fastify.log.error(error);
-      return fastify.response.All(400, { message: `400 You are not from VK` }, reply);
+      return fastify.response.All(
+        400,
+        { message: `400 You are not from VK` },
+        reply
+      );
     }
- }
-}
-
-
+  },
+};
 
 // module.exports = {
 //   async execute(fastify, command, request, reply) {

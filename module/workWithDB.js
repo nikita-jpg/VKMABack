@@ -1,12 +1,10 @@
 const Sequelize = require("sequelize");
-const Serializer = require('sequelize-to-json');
+const Serializer = require("sequelize-to-json");
 
 let Era;
-module.exports.initModels = function(fastify){
-
-//Пользователь
-Era = fastify.sequelize.define("Eras",
-{
+module.exports.initModels = function (fastify) {
+  //Пользователь
+  Era = fastify.sequelize.define("Eras", {
     idEra: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -15,35 +13,33 @@ Era = fastify.sequelize.define("Eras",
     },
     russianName: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     imageName: {
       type: Sequelize.STRING,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Картинка
-ImageFromDb = fastify.sequelize.define("Images",
-{
-  imageName: {
+  //Картинка
+  ImageFromDb = fastify.sequelize.define("Images", {
+    imageName: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
     sourceImageLink: {
       type: Sequelize.STRING,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Опрос
-Survey = fastify.sequelize.define("Surveys",
-{
+  //Опрос
+  Survey = fastify.sequelize.define("Surveys", {
     idSurvey: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -52,45 +48,43 @@ Survey = fastify.sequelize.define("Surveys",
     },
     russianName: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     idEra: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     imageName: {
       type: Sequelize.STRING,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Вопрос
-Question = fastify.sequelize.define("Questions",
-{
-  idQuestion: {
+  //Вопрос
+  Question = fastify.sequelize.define("Questions", {
+    idQuestion: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-  textQuestion: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  idSurvey: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  }
-});
+    textQuestion: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    idSurvey: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+  });
 
-//Вариант ответа
-AnswerOption = fastify.sequelize.define("AnswerOptions",
-{
-  idAnswerOption: {
+  //Вариант ответа
+  AnswerOption = fastify.sequelize.define("AnswerOptions", {
+    idAnswerOption: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -98,313 +92,399 @@ AnswerOption = fastify.sequelize.define("AnswerOptions",
     },
     idQuestion: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     text: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     score: {
       type: Sequelize.STRING,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Пользователь
-Person = fastify.sequelize.define("Persons",
-{
-  idUser: {
+  //Пользователь
+  Person = fastify.sequelize.define("Persons", {
+    idUser: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
-  isFirstOpen: {
+    isFirstOpen: {
       type: Sequelize.INTEGER,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Ответы пользователя на вопросы
-UserAnswers = fastify.sequelize.define("UserAnswers",
-{
-  idUser: {
+  //Ответы пользователя на вопросы
+  UserAnswers = fastify.sequelize.define("UserAnswers", {
+    idUser: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
-  idSurvey: {
+    idSurvey: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
     },
-  idQuestion: {
+    idQuestion: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
     },
-  idAnswerOption: {
+    idAnswerOption: {
       type: Sequelize.INTEGER,
       primaryKey: false,
-      allowNull: false
-    }
-});
+      allowNull: false,
+    },
+  });
 
-//Конфигурация для связи между объектом и картинкой в бд
-const configForImage = {
-  foreignKey: 'imageName',
-  as:'image',
-  onUpdate:'CASCADE', 
-  onDelete:'NO ACTION'
-}
-//Сделать!!!!, выше готово!!!!
+  //Курсач
+  Dish = fastify.sequelize.define("Dishes", {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    title: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    img: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    price: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+  });
 
+  //Конфигурация для связи между объектом и картинкой в бд
+  const configForImage = {
+    foreignKey: "imageName",
+    as: "image",
+    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+  };
+  //Сделать!!!!, выше готово!!!!
 
+  //Картинка и эпоха
+  ImageFromDb.hasOne(Era, { foreignKey: "imageName" });
+  Era.belongsTo(ImageFromDb, { ...configForImage });
 
-//Картинка и эпоха
-ImageFromDb.hasOne(Era,{foreignKey: 'imageName'})
-Era.belongsTo(ImageFromDb,{...configForImage})
+  //Картинка и опрос
+  ImageFromDb.hasOne(Survey, { foreignKey: "imageName" });
+  Survey.belongsTo(ImageFromDb, { ...configForImage });
 
-//Картинка и опрос
-ImageFromDb.hasOne(Survey,{foreignKey: 'imageName'})
-Survey.belongsTo(ImageFromDb,{...configForImage})
+  //Эпоха и опрос
+  Era.hasMany(Survey, {
+    foreignKey: "idEra",
+    as: "surveys",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+  Survey.belongsTo(Era, { foreignKey: "idEra" });
 
+  //Опрос и вопрос
+  Survey.hasMany(Question, {
+    foreignKey: "idSurvey",
+    as: "questions",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+  Question.belongsTo(Survey, { foreignKey: "idSurvey" });
 
+  //Опрос и ответ пользователя
+  Survey.hasMany(UserAnswers, {
+    foreignKey: "idSurvey",
+    as: "userAnswer",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+  UserAnswers.belongsTo(Survey, { foreignKey: "idSurvey" });
 
-//Эпоха и опрос
-Era.hasMany(Survey, {foreignKey: 'idEra', as:'surveys', onUpdate:'CASCADE',onDelete:'CASCADE'})
-Survey.belongsTo(Era,{foreignKey: 'idEra'})
+  //Вопрос и варианты ответа
+  Question.hasMany(AnswerOption, {
+    foreignKey: "idQuestion",
+    as: "answerOptions",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+  AnswerOption.belongsTo(Question, { foreignKey: "idQuestion" });
 
-
-
-//Опрос и вопрос
-Survey.hasMany(Question,{foreignKey: 'idSurvey', as:'questions', onUpdate:'CASCADE',onDelete:'CASCADE'})
-Question.belongsTo(Survey,{foreignKey: 'idSurvey'})
-
-//Опрос и ответ пользователя
-Survey.hasMany(UserAnswers,{foreignKey: 'idSurvey', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-UserAnswers.belongsTo(Survey,{foreignKey: 'idSurvey'})
-
-
-
-//Вопрос и варианты ответа
-Question.hasMany(AnswerOption,{foreignKey: 'idQuestion', as:'answerOptions', onUpdate:'CASCADE',onDelete:'CASCADE'})
-AnswerOption.belongsTo(Question,{foreignKey: 'idQuestion'})
-
-//Вопрос и ответ пользователя
-Question.hasOne(UserAnswers,{foreignKey: 'idQuestion', as:'userAnswer', onUpdate:'CASCADE',onDelete:'CASCADE'})
-UserAnswers.belongsTo(Question,{foreignKey: 'idQuestion'})
-
-}
+  //Вопрос и ответ пользователя
+  Question.hasOne(UserAnswers, {
+    foreignKey: "idQuestion",
+    as: "userAnswer",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  });
+  UserAnswers.belongsTo(Question, { foreignKey: "idQuestion" });
+};
 
 const eraSheme = {
-
   //Эпоха
-  include: ['@all', 'image', 'surveys'],
-  exclude: ['@pk','@fk'],
-  assoc:{
-    image:{
-      include:['imageName','sourceImageLink']
+  include: ["@all", "image", "surveys"],
+  exclude: ["@pk", "@fk"],
+  assoc: {
+    image: {
+      include: ["imageName", "sourceImageLink"],
     },
 
     //Опросы
-    surveys:{
-      include: ['@all', 'image', 'questions'],
-      exclude: ['@pk','@fk'],
-      assoc:{
-
-        image:{
-          include:['imageName','sourceImageLink']
+    surveys: {
+      include: ["@all", "image", "questions"],
+      exclude: ["@pk", "@fk"],
+      assoc: {
+        image: {
+          include: ["imageName", "sourceImageLink"],
         },
-  
-        //Вопросы
-        questions:{
-          include: ['@all','answerOptions', 'userAnswer'],
-          exclude: ['idSurvey','imageName'],
-          assoc:{
 
+        //Вопросы
+        questions: {
+          include: ["@all", "answerOptions", "userAnswer"],
+          exclude: ["idSurvey", "imageName"],
+          assoc: {
             //Варианты ответа
-            answerOptions:{
-              include: ['@all']
+            answerOptions: {
+              include: ["@all"],
             },
 
             //Вариант ответа пользователя
-            userAnswer:{
-              include:['idAnswer']
-            }
-            
-          }
-        }
-      }
-    }
-  }
-}
-
+            userAnswer: {
+              include: ["idAnswer"],
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 const defaultSheme = {
-  include: ['@all', 'image'],
-  exclude: ['imageName'],
-  assoc:{
-    image:{
-      include:['imageName','sourceImageLink']
-    }
-  }
-}
+  include: ["@all", "image"],
+  exclude: ["imageName"],
+  assoc: {
+    image: {
+      include: ["imageName", "sourceImageLink"],
+    },
+  },
+};
 const answerOptionSheme = {
-  include: ['@all']
+  include: ["@all"],
   // exclude: ['imageName'],
   // assoc:{
   //   image:{
   //     include:['imageName','sourceImageLink']
   //   }
   // }
-}
+};
 const userAnswersSheme = {
-  include: ['@all'],
-  exclude: ['idUser'],
+  include: ["@all"],
+  exclude: ["idUser"],
   // assoc:{
   //   image:{
   //     include:['imageName','sourceImageLink']
   //   }
   // }
-}
+};
 
+getUserData = async function (idUser) {
+  const user = await Person.findByPk(idUser)
+    .then((user) => {
+      return user;
+    })
+    .catch((user) => console.log(user));
 
-getUserData = async function(idUser){
-  const user =  await Person
-  .findByPk(idUser)
-  .then(user=>{return user})
-  .catch(user=>console.log(user));
-
-  if(user.isFirstOpen === 1){
+  if (user.isFirstOpen === 1) {
     await Person.upsert({
-      idUser:idUser,
-      isFirstOpen:false
-    }).then(res=>{return true}).catch(err=>{console.log(err); return false})
+      idUser: idUser,
+      isFirstOpen: false,
+    })
+      .then((res) => {
+        return true;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
   }
 
-  return Serializer.serializeMany([user], Person, userAnswersSheme)[0]
-}
+  return Serializer.serializeMany([user], Person, userAnswersSheme)[0];
+};
 
 //Получаем эры
-getEras = async function(){
-  const eras = await Era
-  .findAll({include:{model: ImageFromDb, as: 'image'}})
-  .then(eras=>{return eras})
-  .catch(eras=>console.log(eras));
+getEras = async function () {
+  const eras = await Era.findAll({
+    include: { model: ImageFromDb, as: "image" },
+  })
+    .then((eras) => {
+      return eras;
+    })
+    .catch((eras) => console.log(eras));
 
-
-  return Serializer.serializeMany(eras, Era, defaultSheme)
-}
+  return Serializer.serializeMany(eras, Era, defaultSheme);
+};
 //Получаем опросы
-getSurveys = async function(){
-  const surveys = await Survey
-  .findAll({include:{model: ImageFromDb, as: 'image'}})
-  .then(surveys=>{return surveys})
-  .catch(surveys=>console.log(surveys));
+getSurveys = async function () {
+  const surveys = await Survey.findAll({
+    include: { model: ImageFromDb, as: "image" },
+  })
+    .then((surveys) => {
+      return surveys;
+    })
+    .catch((surveys) => console.log(surveys));
 
-
-  return Serializer.serializeMany(surveys, Survey, defaultSheme)
-}
+  return Serializer.serializeMany(surveys, Survey, defaultSheme);
+};
 //Получаем вопросы
-getQuestions = async function(){
-  const questions = await Question
-  .findAll()
-  .then(questions=>{return questions})
-  .catch(questions=>console.log(questions));
+getQuestions = async function () {
+  const questions = await Question.findAll()
+    .then((questions) => {
+      return questions;
+    })
+    .catch((questions) => console.log(questions));
 
-
-  return Serializer.serializeMany(questions, Question, defaultSheme)
-}
+  return Serializer.serializeMany(questions, Question, defaultSheme);
+};
 //Получаем варианты ответов
-getAnswerOptions = async function(){
-  const answerOptions = await AnswerOption
-  .findAll()
-  .then(answerOptions=>{return answerOptions})
-  .catch(answerOptions=>console.log(answerOptions));
+getAnswerOptions = async function () {
+  const answerOptions = await AnswerOption.findAll()
+    .then((answerOptions) => {
+      return answerOptions;
+    })
+    .catch((answerOptions) => console.log(answerOptions));
 
-
-  return Serializer.serializeMany(answerOptions, AnswerOption, answerOptionSheme)
-}
+  return Serializer.serializeMany(
+    answerOptions,
+    AnswerOption,
+    answerOptionSheme
+  );
+};
 
 //Получаем ответы пользователя
-getUserAnswers = async function(idUser){
-  const userAnswers = await UserAnswers
-  .findAll({where:{idUser: idUser}, required: false})
-  .then(answerOptions=>{return answerOptions})
-  .catch(answerOptions=>console.log(answerOptions));
+getUserAnswers = async function (idUser) {
+  const userAnswers = await UserAnswers.findAll({
+    where: { idUser: idUser },
+    required: false,
+  })
+    .then((answerOptions) => {
+      return answerOptions;
+    })
+    .catch((answerOptions) => console.log(answerOptions));
 
+  return Serializer.serializeMany(userAnswers, UserAnswers, userAnswersSheme);
+};
 
-  return Serializer.serializeMany(userAnswers, UserAnswers, userAnswersSheme)
-}
+sendStartData = async function (idUser) {
+  const userData = await getUserData(idUser);
+  const eras = await getEras();
+  const surveys = await getSurveys();
+  const questions = await getQuestions();
+  const answerOptions = await getAnswerOptions();
+  const userAnswers = await getUserAnswers(idUser);
 
-sendStartData = async function(idUser){
-  const userData = await getUserData(idUser)
-  const eras = await getEras()
-  const surveys = await getSurveys()
-  const questions = await getQuestions()
-  const answerOptions = await getAnswerOptions()
-  const userAnswers = await getUserAnswers(idUser)
+  return {
+    UserData: userData,
+    Eras: eras,
+    Surveys: surveys,
+    Questions: questions,
+    AnswerOptions: answerOptions,
+    UserAnswers: userAnswers,
+  };
+};
 
-  return{
-    UserData:userData,
-    Eras:eras,
-    Surveys:surveys,
-    Questions:questions,
-    AnswerOptions:answerOptions,
-    UserAnswers:userAnswers
-  }
-}
-
-exports.getStartDate = async function(userId){
-
+exports.getStartDate = async function (userId) {
   let ret;
 
   //Если пользователь есть, то получаем значение isFirstOpen. Если его нет, то создаём
   let user = await Person.findByPk(userId)
-  .then(res=>{return res})
-  .catch(res=>{console.log(res + "err"); return null})
-  if(user === null){
-    await Person.create(
-      {
-        idUser: userId,
-        isFirstOpen: true
-      }
-    )
-    .then(res=>{
-      ret = sendStartData(userId)
+    .then((res) => {
+      return res;
     })
-    .catch(err=>{console.log(err + " err")})
-  }else{
-    ret = sendStartData(userId)
+    .catch((res) => {
+      console.log(res + "err");
+      return null;
+    });
+  if (user === null) {
+    await Person.create({
+      idUser: userId,
+      isFirstOpen: true,
+    })
+      .then((res) => {
+        ret = sendStartData(userId);
+      })
+      .catch((err) => {
+        console.log(err + " err");
+      });
+  } else {
+    ret = sendStartData(userId);
   }
 
-  return ret
-}
-
+  return ret;
+};
 
 //Пользователь присылает данные о своём ответе на вопрос
-exports.giveAnswer = async function(userId, surveyId, questionId, answerId){
-
+exports.giveAnswer = async function (userId, surveyId, questionId, answerId) {
   const result = await UserAnswers.upsert({
-    idUser:userId,
-    idSurvey:surveyId,
+    idUser: userId,
+    idSurvey: surveyId,
     idQuestion: questionId,
-    idAnswerOption: answerId
-  }).then(res=>{return true}).catch(err=>{console.log(err); return false})
+    idAnswerOption: answerId,
+  })
+    .then((res) => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 
-  return result
-}
+  return result;
+};
 
-exports.clearUserSurveyAnswers = async function(userId, surveyId){
-
+exports.clearUserSurveyAnswers = async function (userId, surveyId) {
   const resultDelete = await UserAnswers.destroy({
     where: {
-      idUser:userId,
-      idSurvey:surveyId,
-    }
+      idUser: userId,
+      idSurvey: surveyId,
+    },
   })
-    .then(res=>{return true})
-    .catch(err=>{console.log(err); return false})
+    .then((res) => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 
-  return resultDelete
-}
+  return resultDelete;
+};
+
+//Курсач
+const dishSheme = {
+  include: ["@all"],
+};
+
+//Курсач
+exports.getDishes = async function () {
+  const dishes = await Dish.findAll()
+    .then((dishes) => {
+      return dishes;
+    })
+    .catch((dishes) => console.log(dishes));
+
+  return Serializer.serializeMany(dishes, Dish, dishSheme);
+};
