@@ -36,6 +36,5 @@
     "sequelize-fastify": "^1.0.9",
     "sequelize-to-json": "^0.10.4",
     "winston": "^3.3.3"
-  },
-  "devDependencies": {}
+  }
 }
