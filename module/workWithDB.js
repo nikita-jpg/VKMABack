@@ -171,6 +171,44 @@ module.exports.initModels = function (fastify) {
     },
   });
 
+  Zakaz = fastify.sequelize.define("Zakazes", {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    address: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    fhoneNumber: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    date: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    timeStart: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    timeEnd: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    comment: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  });
+  //Курсач_Конец
+
   //Конфигурация для связи между объектом и картинкой в бд
   const configForImage = {
     foreignKey: "imageName",
@@ -478,7 +516,6 @@ const dishSheme = {
   include: ["@all"],
 };
 
-//Курсач
 exports.getDishes = async function () {
   const dishes = await Dish.findAll()
     .then((dishes) => {
@@ -488,3 +525,32 @@ exports.getDishes = async function () {
 
   return Serializer.serializeMany(dishes, Dish, dishSheme);
 };
+exports.addZakaz = async function (
+  name,
+  address,
+  fhoneNumber,
+  date,
+  timeStart,
+  timeEnd,
+  comment
+) {
+  const result = await Zakaz.upsert({
+    name: name,
+    address: address,
+    fhoneNumber: fhoneNumber,
+    date: date,
+    timeStart: timeStart,
+    timeEnd: timeEnd,
+    comment: comment,
+  })
+    .then((res) => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+
+  return result;
+};
+//Курсач_Конец
